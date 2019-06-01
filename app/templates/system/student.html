@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block a1 %}
+<a class="nav-item nav-link active" href="{{ url_for('student_info') }}">个人信息<span class="sr-only">(current)</span></a>
+{% endblock %}
+{% block a2 %}
+<a class="nav-item nav-link" href="{{ url_for('course_select_table') }}">已选课程</a>
+{% endblock %}
+{% block a3 %}
+<a class="nav-item nav-link" href="{{ url_for('course') }}">选课</a>
+{% endblock %}
+{% block a4 %}
+<a class="nav-item nav-link" href="{{ url_for('grade_query') }}">成绩查询</a>
+{% endblock %}
+{% block a5 %}
+<a class="nav-item nav-link" href="{{ url_for('major_info') }}">专业信息</a>
+{% endblock %}
+{% block a6 %}
+<a class="nav-item nav-link" href="{{ url_for('dept_info') }}">学院信息</a>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "system/teacher.html" %}
+
+{% block app_content %}
+    <p>课程号：<strong>{{ course_info.CourseNum }}</strong><br>
+        课程名：<strong>{{ course_info.CourseName }}</strong><br>
+        选课人数：<strong>{{ course_info.CourseStudents }}</strong>
+    </p>
+    <table class="table table-striped table-bordered table-hover">
+        <tr>
+            <th align="center">学号</th>
+            <th align="center">姓名</th>
+            <th align="center">性别</th>
+            <th align="center">学院</th>
+            <th align="center">专业</th>
+        </tr>
+        {% if tables %}
+        {% for table in tables %}
+        <tr>
+            <td align="center">{{ table.StudentNum }}</td>
+            <td align="center">{{ table.StudentName }}</td>
+            <td align="center">{{ table.StudentSex }}</td>
+            <td align="center">{{ table.DeptName }}</td>
+            <td align="center">{{ table.MajorName }}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </table>
+
+{% endblock %}
