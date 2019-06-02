@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 
+{% block a0 %}
+<a class="nav-item nav-link" href="{{ url_for('student_index')}}">系统首页</a>
+{% endblock %}
 {% block a1 %}
-<a class="nav-item nav-link active" href="{{ url_for('student_info') }}">个人信息<span class="sr-only">(current)</span></a>
+<a class="nav-item nav-link" href="{{ url_for('student_info') }}">个人信息</a>
 {% endblock %}
 {% block a2 %}
 <a class="nav-item nav-link" href="{{ url_for('course_select_table') }}">已选课程</a>
@@ -17,4 +20,14 @@
 {% endblock %}
 {% block a6 %}
 <a class="nav-item nav-link" href="{{ url_for('dept_info') }}">学院信息</a>
+{% endblock %}
+
+{% block app_content %}
+    <div class="container">
+        <br><br><br><br><br><br><br><br>
+        <h1 class="display-3" align="center">欢迎登陆学生选课系统</h1>
+        <p class="lead" align="center">Welcome to the Student Selection System</p>
+        <hr class="my-4">
+        <p align="right"><strong>Created by DropDataBase</strong></p>
+    </div>
 {% endblock %}

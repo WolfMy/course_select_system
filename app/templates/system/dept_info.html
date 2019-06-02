@@ -1,8 +1,0 @@
-{% extends "system/student.html" %}
-
-{% block app_content %}
-    <p><strong>学院号：</strong>{{ current_user.major.dept.DeptNum }}<br>
-        <strong>学院名：</strong>{{ current_user.major.dept.DeptName }}<br>
-        <strong>学院简介：</strong>{{ current_user.major.dept.DeptDesc }}
-    </p>
-{% endblock %}

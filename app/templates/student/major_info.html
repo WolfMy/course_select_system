@@ -1,0 +1,8 @@
+{% extends "student/student.html" %}
+
+{% block app_content %}
+<div class="container mb-4"></div>
+    <p class="lead"><strong>专业号：</strong>{{ current_user.major.MajorNum }}</p>
+    <p class="lead"><strong>专业名：</strong>{{ current_user.major.MajorName }}</p>
+    <p class="lead"><strong>专业简介：</strong>{{ current_user.major.MajorDesc }}</p>
+{% endblock %}

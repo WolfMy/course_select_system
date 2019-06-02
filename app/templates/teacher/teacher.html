@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block a0 %}
+<a class="nav-item lead nav-link" href="{{ url_for('teacher_index')}}">系统首页</a>
+{% endblock %}
+{% block a1 %}
+<a class="nav-item lead nav-link" href="{{ url_for('teacher_info') }}">个人信息</a>
+{% endblock %}
+{% block a2 %}
+<a class="nav-item lead nav-link" href="{{ url_for('course_select_detail') }}">选课详情</a>
+{% endblock %}
+{% block a3 %}
+<a class="nav-item lead nav-link" href="{{ url_for('course_grade_input') }}">成绩录入</a>
+{% endblock %}
+
+{% block app_content %}
+    <div class="container">
+        <br><br><br><br><br><br><br><br>
+        <h1 class="display-3" align="center">欢迎登陆教师课程管理系统</h1>
+        <p class="lead" align="center">Welcome to the Teacher Course Management System</p>
+        <hr class="my-4">
+        <p align="right"><strong>Created by DropDataBase</strong></p>
+    </div>
+{% endblock %}

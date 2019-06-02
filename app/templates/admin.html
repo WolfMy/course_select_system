@@ -7,32 +7,34 @@
   <link href="https://v4.bootcss.com/docs/4.0/examples/floating-labels/floating-labels.css" rel="stylesheet">
 {% endblock%}
 
-  {% block content %}
-    <form action="/admin" method="POST" class="form-signin">
-      <div class="text-center mb-4">
-        <h1><strong>后台管理系统</strong></h1>
-      </div>
-      <br>      
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-warning" role="alert">
-            <strong>{{ message }}</strong>
-          </div>
-        {% endfor %}
-      {% endif %}
-      {% endwith %}
-      <div class="form-label-group">
-        <input type="number" name="username" id="inputText" class="form-control" placeholder="Username" required autofocus>
-        <label for="inputText">账号</label>
-      </div>
+{% block navbar %}{% endblock %}
 
-      <div class="form-label-group">
-        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <label for="inputPassword">密码</label>
-      </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">登陆</button>
-      <p class="mt-5 mb-3 text-muted text-center">&copy; DropDataBase 2019-2020</p>
-    </form>
-  {% endblock %}
+{% block content %}
+  <form action="/admin" method="POST" class="form-signin">
+    <div class="text-center mb-4">
+      <h1><strong>后台管理系统</strong></h1>
+    </div>
+    <br>      
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-warning" role="alert">
+          <strong>{{ message }}</strong>
+        </div>
+      {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <div class="form-label-group">
+      <input type="number" name="username" id="inputText" class="form-control" placeholder="Username" required autofocus>
+      <label for="inputText">账号</label>
+    </div>
+
+    <div class="form-label-group">
+      <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+      <label for="inputPassword">密码</label>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">登陆</button>
+    <p class="mt-5 mb-3 text-muted text-center">&copy; DropDataBase 2019-2020</p>
+  </form>
+{% endblock %}
 

@@ -8,6 +8,7 @@
 {% endblock%}
 
   {% block content %}
+  <a href="{{ url_for('admin') }}">管理员登陆</a>
     <form action="/login" method="POST" class="form-signin">
       <div class="text-center mb-4">
         <h1><strong>学生选课系统</strong></h1>
@@ -33,7 +34,7 @@
       </div>
       <div class="checkbox mb-3">
         <label>
-          <input type="checkbox" name="remember" value="remember"> Remember me
+          <input type="checkbox" name="remember"> Remember me
         </label>
       </div>
       <button class="btn btn-lg btn-primary btn-block" type="submit">登陆</button>

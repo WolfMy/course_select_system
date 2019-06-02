@@ -22,6 +22,8 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        remember = request.form.get('remember')
+        remember = [True if remember=='on' else False][0]
         error = None
         is_student = 1
         user = Student.query.filter_by(StudentNum=username).first()
@@ -36,7 +38,7 @@ def login():
             error = '密码错误！'
         
         if error is None:
-            login_user(user)
+            login_user(user, remember=remember)
             next_page = request.args.get('next')
             if not next_page or url_parse(next_page).netloc != '':
                 next_page = url_for('index')
@@ -73,7 +75,7 @@ def logout():
 @login_required
 def student_index():
     if isinstance(current_user._get_current_object(), Student):
-        return render_template('system/student.html')
+        return render_template('student/student.html')
     else:
         logout_user()
     
@@ -81,7 +83,7 @@ def student_index():
 @login_required
 def teacher_index():
     if isinstance(current_user._get_current_object(), Teacher):
-        return render_template('system/teacher.html')
+        return render_template('teacher/teacher.html')
     else:
         logout_user()
 
@@ -89,19 +91,19 @@ def teacher_index():
 @login_required
 def manager():
     if isinstance(current_user._get_current_object(), Manager):
-        return render_template('system/manager.html')
+        return render_template('admin/manager.html')
     else:
         logout_user()
         return redirect(url_for('admin'))
 
-@app.route('/student_info', methods=['GET','POST'])
+@app.route('/student_info/<int:change>', methods=['GET','POST'])
+@app.route('/student_info', defaults={'change':0}, methods=['GET','POST'])
 @login_required
-def student_info():
-    form = EditProfileForm()
-    if form.validate_on_submit():
-        old_password = form.old_password.data
-        new_password = form.new_password.data
-        new_password2 = form.new_password2.data
+def student_info(change):
+    if request.method == 'POST':
+        old_password = request.form['oldpassword']
+        new_password = request.form['newpassword']
+        new_password2 = request.form['newpassword2']
         if not new_password==new_password2:
             flash('两次密码输入不一致！')
         elif not current_user.check_password(old_password):
@@ -111,16 +113,16 @@ def student_info():
             db.session.commit()
             flash('Your changes have been saved.')
         return redirect(url_for('student_info'))
-    return render_template('system/student_info.html', form=form)
+    return render_template('student/student_info.html', change=change)
 
-@app.route('/teacher_info', methods=['GET','POST'])
+@app.route('/teacher_info/<int:change>', methods=['GET','POST'])
+@app.route('/teacher_info', defaults={'change':0}, methods=['GET','POST'])
 @login_required
-def teacher_info():
-    form = EditProfileForm()
-    if form.validate_on_submit():
-        old_password = form.old_password.data
-        new_password = form.new_password.data
-        new_password2 = form.new_password2.data
+def teacher_info(change):
+    if request.method == 'POST':
+        old_password = request.form['oldpassword']
+        new_password = request.form['newpassword']
+        new_password2 = request.form['newpassword2']
         if not new_password==new_password2:
             flash('两次密码输入不一致！')
         elif not current_user.check_password(old_password):
@@ -130,7 +132,7 @@ def teacher_info():
             db.session.commit()
             flash('Your changes have been saved.')
         return redirect(url_for('teacher_info'))
-    return render_template('system/teacher_info.html', form=form)
+    return render_template('teacher/teacher_info.html', change=change)
 
 @app.route('/course_select_table', methods=['GET',])
 @login_required
@@ -149,7 +151,7 @@ def course_select_table():
                 'TeacherName':teacher.TeacherName,
             }
             tables.append(table)
-        return render_template('system/course_select_table.html', tables=tables)
+        return render_template('student/course_select_table.html', tables=tables)
 
 @app.route('/course', methods=['GET',])
 @login_required
@@ -170,7 +172,7 @@ def course():
                     'TeacherName':teacher.TeacherName,
                 }
                 tables.append(table)
-        return render_template('system/course.html', tables=tables)
+        return render_template('student/course.html', tables=tables)
 
 @app.route('/course_drop/<CourseNum>', methods=['GET',])
 @login_required
@@ -199,65 +201,7 @@ def course_select(CourseNum):
             current_user.select_course(course)
             db.session.commit()
             flash('您已成功选择该门课程。')
-        return redirect(url_for('course_select_table'))
-
-@app.route('/major_info', methods=['GET',])
-@login_required
-def major_info():
-    return render_template('system/major_info.html')
-
-@app.route('/dept_info', methods=['GET',])
-@login_required
-def dept_info():
-    return render_template('system/dept_info.html')
-
-@app.route('/course_select_detail/<int:grade_input>')
-@app.route('/course_select_detail', defaults={'grade_input':0})
-@login_required
-def course_select_detail(grade_input):
-    if isinstance(current_user._get_current_object(), Teacher):
-        course = Course.query.filter_by(CourseNum=current_user.CourseNum).first()
-        Students = course.student
-        course_info = {
-            'CourseNum':course.CourseNum,
-            'CourseName':course.CourseName,
-            'CourseStudents':len(Students),
-        }
-        tables = []
-        for Student in Students:
-            major = Major.query.filter_by(MajorNum=Student.MajorNum).first()
-            dept = major.dept
-            table = {
-                'StudentNum':Student.StudentNum,
-                'StudentName':Student.StudentName,
-                'StudentSex':Student.StudentSex,
-                'DeptName':dept.DeptName,
-                'MajorName':major.MajorName
-            }
-            tables.append(table)
-        if not grade_input:
-            return render_template('system/course_select_detail.html', tables=tables, course_info=course_info)
-        else:
-            # TODO: 添加成绩显示功能
-            for table in tables:
-                course_select_table = Course_select_table.query.filter_by(StudentNum=table['StudentNum'], CourseNum=course_info['CourseNum']).first()
-                table['grade'] = course_select_table.Grade
-            return render_template('system/course_select_detail.html', tables=tables, course_info=course_info, grade_input=grade_input)
-
-@app.route('/course_grade_input', methods=['GET', 'POST'])
-@login_required
-def course_grade_input():
-    if isinstance(current_user._get_current_object(), Teacher):
-        if request.method == 'POST':
-            course = Course.query.filter_by(CourseNum=current_user.CourseNum).first()
-            Students = course.student
-            for Student in Students:
-                grade = request.form[Student.StudentNum]
-                course_select_table = Course_select_table.query.filter_by(StudentNum=Student.StudentNum, CourseNum=course.CourseNum).first()
-                course_select_table.input_grade(grade)
-            db.session.commit()
-            flash('成绩录入成功！')
-            return redirect(url_for('course_select_detail', grade_input=1))
+        return redirect(url_for('course'))
 
 @app.route('/grade_query', methods=['GET',])
 @login_required
@@ -278,4 +222,95 @@ def grade_query():
                 'Grade':course_select_table.Grade,
             }
             tables.append(table)
-        return render_template('system/grade_query.html', tables=tables)
+        return render_template('student/grade_query.html', tables=tables)
+
+@app.route('/major_info', methods=['GET',])
+@login_required
+def major_info():
+    return render_template('student/major_info.html')
+
+@app.route('/dept_info', methods=['GET',])
+@login_required
+def dept_info():
+    return render_template('student/dept_info.html')
+
+@app.route('/course_select_detail')
+@login_required
+def course_select_detail():
+    if isinstance(current_user._get_current_object(), Teacher):
+        course = Course.query.filter_by(CourseNum=current_user.CourseNum).first()
+        Students = course.student
+        course_info = {
+            'CourseNum':course.CourseNum,
+            'CourseName':course.CourseName,
+            'CourseStudents':len(Students),
+        }
+        tables = []
+        for Student in Students:
+            major = Major.query.filter_by(MajorNum=Student.MajorNum).first()
+            dept = major.dept
+            table = {
+                'StudentNum':Student.StudentNum,
+                'StudentName':Student.StudentName,
+                'StudentSex':Student.StudentSex,
+                'DeptName':dept.DeptName,
+                'MajorName':major.MajorName
+            }
+            tables.append(table)
+        return render_template('teacher/course_select_detail.html', tables=tables, course_info=course_info)
+
+@app.route('/course_grade_input', methods=['GET', 'POST'])
+@login_required
+def course_grade_input():
+    if isinstance(current_user._get_current_object(), Teacher):
+        course = Course.query.filter_by(CourseNum=current_user.CourseNum).first()
+        Students = course.student
+        if request.method == 'POST':
+            for Student in Students:
+                grade = request.form[Student.StudentNum]
+                course_select_table = Course_select_table.query.filter_by(StudentNum=Student.StudentNum, CourseNum=course.CourseNum).first()
+                course_select_table.input_grade(grade)
+            db.session.commit()
+            flash('成绩录入成功！')
+            return redirect(url_for('course_grade_input'))
+        else:
+            course_info = {
+                'CourseNum':course.CourseNum,
+                'CourseName':course.CourseName,
+                'CourseStudents':len(Students),
+            }
+            tables = []
+            for Student in Students:
+                major = Major.query.filter_by(MajorNum=Student.MajorNum).first()
+                dept = major.dept
+                course_select_table = Course_select_table.query.filter_by(StudentNum=Student.StudentNum, CourseNum=course_info['CourseNum']).first()
+                table = {
+                    'StudentNum':Student.StudentNum,
+                    'StudentName':Student.StudentName,
+                    'StudentSex':Student.StudentSex,
+                    'DeptName':dept.DeptName,
+                    'MajorName':major.MajorName,
+                    'Grade':course_select_table.Grade
+                }
+                tables.append(table)
+        return render_template('teacher/course_grade_input.html', tables=tables, course_info=course_info)
+
+@app.route('/student_manage', methods=['GET', 'POST'])
+@login_required
+def student_manage():
+    return render_template('admin/manager.html')
+
+@app.route('/teacher_manage', methods=['GET', 'POST'])
+@login_required
+def teacher_manage():
+    return render_template('admin/manager.html')
+
+@app.route('/course_manage', methods=['GET', 'POST'])
+@login_required
+def course_manage():
+    return render_template('admin/manager.html')
+
+@app.route('/course_select_manage', methods=['GET', 'POST'])
+@login_required
+def course_select_manage():
+    return render_template('admin/manager.html')

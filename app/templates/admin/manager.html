@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+{{super()}}
+    <link rel="stylesheet" href="/static/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="/static/sweetalert/dist/sweetalert.css">
+    <link rel="stylesheet" href="/static/css/stisla.css">
+{% endblock %}
+
+{% block a0 %}
+<a class="navbar-brand" href="{{ url_for('manager')}}">系统首页</a>
+{% endblock %}
+{% block a1 %}
+<a class="nav-item nav-link" href="{{ url_for('student_manage') }}">学生管理</a>
+{% endblock %}
+{% block a2 %}
+<a class="nav-item nav-link" href="{{ url_for('teacher_manage') }}">教师管理</a>
+{% endblock %}
+{% block a3 %}
+<a class="nav-item nav-link" href="{{ url_for('course_manage') }}">课程管理</a>
+{% endblock %}
+{% block a4 %}
+<a class="nav-item nav-link" href="{{ url_for('course_select_manage') }}">学生选课管理</a>
+{% endblock %}
+
+{% block app_content %}
+    <div class="container">
+        <br><br><br><br><br><br><br><br>
+        <h1 class="display-3" align="center">欢迎登陆学生选课管理系统</h1>
+        <p class="lead" align="center">Welcome to the Management System of Students'Course Selection</p>
+        <hr class="my-4">
+        <p align="right"><strong>Created by DataBase</strong></p>
+    </div>
+{% endblock %}

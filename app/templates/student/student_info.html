@@ -1,0 +1,51 @@
+{% extends "student/student.html" %}
+
+{% block app_content %}
+        {% if not change %}
+        <div class="container mb-4"></div>
+        <h1 class="display-4">Hello, {{ current_user.StudentName }}!</h1>
+        <p class="lead">学号：{{ current_user.StudentNum }}</p>
+        <p class="lead">性别：{{ current_user.StudentSex }}</p>
+        {% if current_user.StudentBirthday %}
+        <p class="lead">生日：{{ current_user.StudentBirthday }}</p>
+        {% endif %}
+        <p class="lead">专业：{{ current_user.major.MajorName }}</p>
+        <p class="lead">学院：{{ current_user.major.dept.DeptName }}</p>
+        <hr class="my-4">
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="{{ url_for('student_info', change=1)}}" role="button">修改密码</a>
+        </p>
+        {% else %}
+        <div class="container col-sm-4">
+        <form action="/student_info" method="POST" class="form-signin">
+            <br><br>
+            <div class="text-center mb-4">
+            <h1>修改密码</h1>
+            </div> 
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-warning" role="alert">
+                <strong>{{ message }}</strong>
+                </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <div class="form-label-group  mb-2">
+                <label for="inputText">原密码</label>
+                <input type="password" name="oldpassword" id="inputPassword" class="form-control" placeholder="Old Password" required autofocus>
+            </div>
+            <div class="form-label-group  mb-2">
+            <label for="inputPassword">新密码</label>
+            <input type="password" name="newpassword" id="inputPassword" class="form-control" placeholder="New Password" required>
+            </div>
+            <div class="form-label-group  mb-3">
+                <label for="inputPassword">再次新密码</label>
+                <input type="password" name="newpassword2" id="inputPassword" class="form-control" placeholder="Repet Password" required>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">确认修改</button>
+            <p class="mt-5 mb-3 text-muted text-center">&copy; DropDataBase 2019-2020</p>
+        </form>
+        </div>
+        {% endif %}
+{% endblock %}
