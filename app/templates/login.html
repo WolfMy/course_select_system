@@ -8,7 +8,15 @@
 {% endblock%}
 
   {% block content %}
-  <a href="{{ url_for('admin') }}">管理员登陆</a>
+  <div class="container">
+      <div class="row clearfix">
+          <div class="col-md-10 column">
+          </div>
+        <div class="col-md-2 column">
+        <a class="btn btn-primary" href="{{ url_for('admin') }}">管理员登陆</a>
+        </div>
+      </div>
+      <div class="row clearfix">
     <form action="/login" method="POST" class="form-signin">
       <div class="text-center mb-4">
         <h1><strong>学生选课系统</strong></h1>
@@ -40,5 +48,7 @@
       <button class="btn btn-lg btn-primary btn-block" type="submit">登陆</button>
       <p class="mt-5 mb-3 text-muted text-center">&copy; DropDataBase 2019-2020</p>
     </form>
+  </div>
+  </div>
   {% endblock %}
 

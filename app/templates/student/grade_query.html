@@ -9,6 +9,7 @@
             <th class="lead">课程名</th>
             <th class="lead">课程学分</th>
             <th class="lead">课程学时</th>
+            <th class="lead">开课学院</th>
             <th class="lead">任课教师</th>
             <th class="lead">成绩</th>
         </tr>
@@ -21,8 +22,13 @@
            <td class="lead">{{ table.CourseName }}</td>
            <td class="lead">{{ table.CourseCredit }}</td>
            <td class="lead">{{ table.CourseTime }}</td>
+           <td class="lead">{{ table.CourseDept }}</td>
            <td class="lead">{{ table.TeacherName }}</td>
+           {% if table.Grade %}
            <td class="lead">{{ table.Grade }}</td>
+           {% else %}
+           <td class="lead">暂无</tr>
+           {% endif %}
         </tr>
         {% endfor %}
         {% endif %}

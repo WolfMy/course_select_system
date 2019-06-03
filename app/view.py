@@ -148,6 +148,7 @@ def course_select_table():
                 'CourseName':course.CourseName,
                 'CourseCredit':course.CourseCredit,
                 'CourseTime':course.CourseTime,
+                'CourseDept':teacher.dept.DeptName,
                 'TeacherName':teacher.TeacherName,
             }
             tables.append(table)
@@ -162,17 +163,19 @@ def course():
         course_selected = [Course_.CourseNum for Course_ in Courses]
         tables = []
         for course in all_courses:
-            if not course.CourseNum in course_selected:
-                teacher = Teacher.query.filter_by(CourseNum=course.CourseNum).first()
-                table = {
-                    'CourseNum':course.CourseNum,
-                    'CourseName':course.CourseName,
-                    'CourseCredit':course.CourseCredit,
-                    'CourseTime':course.CourseTime,
-                    'TeacherName':teacher.TeacherName,
-                }
-                tables.append(table)
-        return render_template('student/course.html', tables=tables)
+            teacher = Teacher.query.filter_by(CourseNum=course.CourseNum).first()
+            table = {
+                'CourseNum':course.CourseNum,
+                'CourseName':course.CourseName,
+                'CourseCredit':course.CourseCredit,
+                'CourseTime':course.CourseTime,
+                'CourseDept':teacher.dept.DeptName,
+                'TeacherName':teacher.TeacherName,
+                'CourseStudents':len(course.student),
+                'CourseCapacity':course.CourseCapacity,
+            }
+            tables.append(table)
+        return render_template('student/course.html', tables=tables, course_selected=course_selected)
 
 @app.route('/course_drop/<CourseNum>', methods=['GET',])
 @login_required
@@ -218,6 +221,7 @@ def grade_query():
                 'CourseName':course.CourseName,
                 'CourseCredit':course.CourseCredit,
                 'CourseTime':course.CourseTime,
+                'CourseDept':teacher.dept.DeptName,
                 'TeacherName':teacher.TeacherName,
                 'Grade':course_select_table.Grade,
             }
@@ -267,9 +271,10 @@ def course_grade_input():
         Students = course.student
         if request.method == 'POST':
             for Student in Students:
-                grade = request.form[Student.StudentNum]
                 course_select_table = Course_select_table.query.filter_by(StudentNum=Student.StudentNum, CourseNum=course.CourseNum).first()
-                course_select_table.input_grade(grade)
+                if not course_select_table.Grade:                
+                    grade = request.form[Student.StudentNum]
+                    course_select_table.input_grade(grade)
             db.session.commit()
             flash('成绩录入成功！')
             return redirect(url_for('course_grade_input'))
@@ -295,22 +300,30 @@ def course_grade_input():
                 tables.append(table)
         return render_template('teacher/course_grade_input.html', tables=tables, course_info=course_info)
 
+@app.route('/grade_set_zero/<StudentNum>')
+def grade_set_zero(StudentNum):
+    if isinstance(current_user._get_current_object(), Teacher):
+        course_select_table = Course_select_table.query.filter_by(StudentNum=StudentNum, CourseNum=current_user.CourseNum).first()
+        course_select_table.input_grade(None)
+        db.session.commit()
+        return redirect(url_for('course_grade_input'))
+
 @app.route('/student_manage', methods=['GET', 'POST'])
 @login_required
 def student_manage():
-    return render_template('admin/manager.html')
+    return render_template('admin/student_manage.html')
 
 @app.route('/teacher_manage', methods=['GET', 'POST'])
 @login_required
 def teacher_manage():
-    return render_template('admin/manager.html')
+    return render_template('admin/teacher_manage.html')
 
 @app.route('/course_manage', methods=['GET', 'POST'])
 @login_required
 def course_manage():
-    return render_template('admin/manager.html')
+    return render_template('admin/course_manage.html')
 
 @app.route('/course_select_manage', methods=['GET', 'POST'])
 @login_required
 def course_select_manage():
-    return render_template('admin/manager.html')
+    return render_template('admin/course_select_manage.html')

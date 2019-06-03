@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block a0 %}
-<a class="navbar-brand" href="{{ url_for('manager')}}">系统首页</a>
+<a class="nav-item nav-link" href="{{ url_for('manager')}}">系统首页</a>
 {% endblock %}
 {% block a1 %}
 <a class="nav-item nav-link" href="{{ url_for('student_manage') }}">学生管理</a>
@@ -25,7 +25,9 @@
 
 {% block app_content %}
     <div class="container">
-        <br><br><br><br><br><br><br><br>
+        <br><br><br><br><br>
+        <h1 class="display-4">Hello, <strong>管理员</strong>!</h1>
+        <br><br><br>
         <h1 class="display-3" align="center">欢迎登陆学生选课管理系统</h1>
         <p class="lead" align="center">Welcome to the Management System of Students'Course Selection</p>
         <hr class="my-4">

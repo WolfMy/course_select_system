@@ -9,6 +9,7 @@
             <th class="lead">课程名</th>
             <th class="lead">课程学分</th>
             <th class="lead">课程学时</th>
+            <th class="lead">开课学院</th>
             <th class="lead">任课教师</th>
             <th class="lead">选情情况</th>
         </tr>
@@ -21,6 +22,7 @@
            <td class="lead">{{ table.CourseName }}</td>
            <td class="lead">{{ table.CourseCredit }}</td>
            <td class="lead">{{ table.CourseTime }}</td>
+           <td class="lead">{{ table.CourseDept }}</td>
            <td class="lead">{{ table.TeacherName }}</td>
            <td class="lead"><a href="{{ url_for('course_drop', CourseNum=table.CourseNum) }}" class="btn btn-outline-danger btn-sm" role="button">退选</a></td>
         </tr>

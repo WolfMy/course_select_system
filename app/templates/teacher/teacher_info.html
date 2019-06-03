@@ -3,7 +3,7 @@
 {% block app_content %}
         {% if not change %}
         <div class="container mb-4"></div>
-        <h1 class="display-4">Hello, {{ current_user.TeacherName }}!</h1>
+        <p class="lead">姓名：{{ current_user.TeacherName }}</p>
         <p class="lead">工号：{{ current_user.TeacherNum }}</p>
         <p class="lead">性别：{{ current_user.TeacherSex }}</p>
         {% if current_user.TeacherBirthday %}

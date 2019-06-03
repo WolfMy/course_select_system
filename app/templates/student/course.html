@@ -9,8 +9,11 @@
             <th class="lead">课程名</th>
             <th class="lead">课程学分</th>
             <th class="lead">课程学时</th>
+            <th class="lead">开课学院</th>
             <th class="lead">任课教师</th>
-            <th class="lead">选情情况</th>
+            <th class="lead">课程容量</th>
+            <th class="lead">已选人数</th>
+            <th class="lead"></th>
         </tr>
             </thead>
             <tbody>
@@ -21,8 +24,17 @@
            <td class="lead">{{ table.CourseName }}</td>
            <td class="lead">{{ table.CourseCredit }}</td>
            <td class="lead">{{ table.CourseTime }}</td>
+           <td class="lead">{{ table.CourseDept }}</td>
            <td class="lead">{{ table.TeacherName }}</td>
+           <td class="lead" align="center">{{ table.CourseCapacity }}人</td>
+           <td class="lead" align="center">{{ table.CourseStudents }}人</td>
+           {% if table.CourseNum in course_selected %}
+           <td class="lead">已选</td>
+           {% elif table.CourseStudents==table.CourseCapacity %}
+           <td class="lead">人数已满</td>
+           {% else %}
            <td class="lead"><a href="{{ url_for('course_select', CourseNum=table.CourseNum) }}" class="btn btn-outline-success btn-sm" role="button">选课</a></td>
+           {% endif %}
         </tr>
         {% endfor %}
         {% endif %}

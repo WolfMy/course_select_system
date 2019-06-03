@@ -117,6 +117,7 @@ class Course(db.Model):
     CourseName = db.Column(db.String(10), nullable=False)
     CourseCredit = db.Column(db.Integer, nullable=False)
     CourseTime = db.Column(db.Integer, nullable=False)
+    CourseCapacity = db.Column(db.Integer, nullable=False)
     CourseDesc = db.Column(db.Text)
 
 class TrainingProgram(db.Model):

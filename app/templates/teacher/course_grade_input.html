@@ -21,23 +21,37 @@
         {% if tables %}
         {% for table in tables %}
         <tr>
-            <td class="lead StudentNum">{{ table.StudentNum }}</td>
+           <td class="lead StudentNum">{{ table.StudentNum }}</td>
            <td class="lead">{{ table.StudentName }}</td>
            <td class="lead">{{ table.StudentSex }}</td>
            <td class="lead">{{ table.DeptName }}</td>
            <td class="lead">{{ table.MajorName }}</td>
            <td class="lead">
-                <div class="input-group input-group-sm">
-                    <p>{{ table.Grade }}</p>
+               {% if table.Grade %}
+               <div class="row clearfix">
+                <div class="col-md-5 column">
+                    <strong>{{ table.Grade }}</strong>
+                </div>
+                <div class="col-md-7 column">
+                    <a  class="btn btn-danger btn-sm" href="{{ url_for('grade_set_zero', StudentNum=table.StudentNum) }}">重置成绩</a>
+                </div>
+               </div>
+                {% else %}
+                <div class="input-group input-group-sm"> 
                     <input type="number" class="form-control" max=100 min=0 required>
                 </div>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
         {% endif %}
         </tbody>
     </table>
-    <button type="submit" class="btn btn-outline-success btn-lg btn-block">确认录入</button>
+    <div class="row">
+        <div class="col-md-12 column">
+            <button type="submit" class="btn btn-outline-success btn-lg btn-block">确认录入</button>
+        </div>
+    </div>
 </form>
 {% endblock %}
 
