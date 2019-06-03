@@ -35,6 +35,28 @@ class Major(db.Model):
     Students = db.relationship('Student', backref='major', lazy='dynamic')
     TrainingProgram = db.Column(db.String(7))
 
+class Course_select_table(db.Model):
+    __tablename__ = "course_select_table"
+    StudentNum = db.Column(db.String(8), db.ForeignKey('student.StudentNum'), primary_key=True, nullable=False)
+    CourseNum = db.Column(db.String(10), db.ForeignKey('course.CourseNum'), primary_key=True, nullable=False)
+    TeacherNum = db.Column(db.String(8), db.ForeignKey('teacher.TeacherNum'), primary_key=True, nullable=False)
+    Grade = db.Column(db.Integer)
+
+    def __init__(self, StudentNum, CourseNum, TeacherNum):
+        self.StudentNum = StudentNum
+        self.CourseNum = CourseNum
+        self.TeacherNum = TeacherNum
+        
+    def input_grade(self, grade):   
+        self.Grade = grade
+
+class Course_Teacher(db.Model):
+    __tablename__ = "course_teacher"
+    CourseNum = db.Column(db.String(8), db.ForeignKey('course.CourseNum'), primary_key=True, nullable=False)
+    TeacherNum = db.Column(db.String(10), db.ForeignKey('teacher.TeacherNum'), primary_key=True, nullable=False)
+    #Time = db.Column(db.Text)
+    CourseCapacity = db.Column(db.Integer, nullable=False)
+
 class Teacher(UserMixin, db.Model):
     # 教师
     TeacherNum = db.Column(db.String(8), primary_key=True)
@@ -44,7 +66,8 @@ class Teacher(UserMixin, db.Model):
     TeacherBirthday = db.Column(db.DateTime)
     TeacherTitle = db.Column(db.String(10))
     TeacherPassword = db.Column(db.Text, nullable=False)
-    CourseNum = db.Column(db.String(8), db.ForeignKey('course.CourseNum'))
+    Students = db.relationship('Student', secondary='course_select_table', backref='teacher', lazy='dynamic')
+    Courses = db.relationship('Course', secondary='course_teacher', backref='teacher', lazy='dynamic')
 
     # override
     def get_id(self):
@@ -53,23 +76,6 @@ class Teacher(UserMixin, db.Model):
         self.TeacherPassword = generate_password_hash(password)
     def check_password(self, password):
         return check_password_hash(self.TeacherPassword, password)
-
-'''
-# 选课表
-Course_select_table = db.Table('course_select_table',
-                        db.Column('StudentNum', db.String(8), db.ForeignKey('student.StudentNum'), nullable=False),
-                        db.Column('CourseNum', db.String(10), db.ForeignKey('course.CourseNum'), nullable=False),
-                        db.Column('Grade', db.Integer))
-'''
-
-class Course_select_table(db.Model):
-    __tablename__ = "course_select_table"
-    StudentNum = db.Column(db.String(8), db.ForeignKey('student.StudentNum'), primary_key=True, nullable=False)
-    CourseNum = db.Column(db.String(10), db.ForeignKey('course.CourseNum'), primary_key=True, nullable=False)
-    Grade = db.Column(db.Integer)
-
-    def input_grade(self, grade):
-        self.Grade = grade
 
 class Student(UserMixin, db.Model):
     # 学生
@@ -91,8 +97,15 @@ class Student(UserMixin, db.Model):
     def drop_course(self, CourseNum):
         course_drop = [course for course in self.Courses if course.CourseNum==CourseNum][0]
         self.Courses.remove(course_drop)
-    def select_course(self, Course):
-        self.Courses.append(Course)
+
+class Course(db.Model):
+    # 课程
+    CourseNum = db.Column(db.String(8), primary_key=True)
+    CourseName = db.Column(db.String(10), nullable=False)
+    CourseCredit = db.Column(db.Integer, nullable=False)
+    CourseTime = db.Column(db.Integer, nullable=False)
+    CourseDesc = db.Column(db.Text)
+    Teachers = db.relationship('Teacher', secondary='course_teacher', backref='course', lazy='dynamic') 
 
 class Manager(UserMixin, db.Model):
     # 管理员
@@ -110,15 +123,6 @@ class Manager(UserMixin, db.Model):
         self.ManagerPassword = generate_password_hash(password)
     def check_password(self, password):
         return check_password_hash(self.ManagerPassword, password)
-
-class Course(db.Model):
-    # 课程
-    CourseNum = db.Column(db.String(8), primary_key=True)
-    CourseName = db.Column(db.String(10), nullable=False)
-    CourseCredit = db.Column(db.Integer, nullable=False)
-    CourseTime = db.Column(db.Integer, nullable=False)
-    CourseCapacity = db.Column(db.Integer, nullable=False)
-    CourseDesc = db.Column(db.Text)
 
 class TrainingProgram(db.Model):
     # 培养计划

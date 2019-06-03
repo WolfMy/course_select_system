@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template, request, flash, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models_new import Student, Teacher, Manager, Course, Course_select_table, Major
+from app.models_new import Student, Teacher, Manager, Course, Course_select_table, Course_Teacher, Major
 from app.forms import EditProfileForm
 from app import db
 
@@ -141,18 +141,40 @@ def course_select_table():
         Courses = current_user.Courses
         tables = []
         for Course_ in Courses:
-            course = Course.query.filter_by(CourseNum=Course_.CourseNum).first()
-            teacher = Teacher.query.filter_by(CourseNum=Course_.CourseNum).first()
+            course_select_table = Course_select_table.query.filter_by(StudentNum=current_user.StudentNum,CourseNum=Course_.CourseNum).first()
+            teacher = Teacher.query.filter_by(TeacherNum=course_select_table.TeacherNum).first()
             table = {
                 'CourseNum':Course_.CourseNum,
-                'CourseName':course.CourseName,
-                'CourseCredit':course.CourseCredit,
-                'CourseTime':course.CourseTime,
+                'CourseName':Course_.CourseName,
+                'CourseCredit':Course_.CourseCredit,
+                'CourseTime':Course_.CourseTime,
                 'CourseDept':teacher.dept.DeptName,
                 'TeacherName':teacher.TeacherName,
             }
             tables.append(table)
         return render_template('student/course_select_table.html', tables=tables)
+
+@app.route('/course_teachers/<CourseNum>', methods=['GET',])
+@login_required
+def course_teachers(CourseNum):
+    if isinstance(current_user._get_current_object(), Student):
+        course_teachers = Course_Teacher.query.filter_by(CourseNum=CourseNum).all()
+        course = Course.query.filter_by(CourseNum=CourseNum).first()
+        tables = []
+        for course_teacher in course_teachers:
+            course_select_table = Course_select_table.query.filter_by(CourseNum=CourseNum, TeacherNum=course_teacher.TeacherNum).all()
+            teacher = Teacher.query.filter_by(TeacherNum=course_teacher.TeacherNum).first()
+            table = {
+                'CourseNum':course_teacher.CourseNum,
+                'TeacherNum':course_teacher.TeacherNum,
+                'CourseName':course.CourseName,
+                'TeacherName':teacher.TeacherName,
+                'Time':'TODO',
+                'CourseCapacity':course_teacher.CourseCapacity,
+                'CourseStudents':len(course_select_table),
+            }
+            tables.append(table)
+        return render_template('student/course_teachers.html', tables=tables)
 
 @app.route('/course', methods=['GET',])
 @login_required
@@ -163,16 +185,12 @@ def course():
         course_selected = [Course_.CourseNum for Course_ in Courses]
         tables = []
         for course in all_courses:
-            teacher = Teacher.query.filter_by(CourseNum=course.CourseNum).first()
             table = {
                 'CourseNum':course.CourseNum,
                 'CourseName':course.CourseName,
                 'CourseCredit':course.CourseCredit,
                 'CourseTime':course.CourseTime,
-                'CourseDept':teacher.dept.DeptName,
-                'TeacherName':teacher.TeacherName,
-                'CourseStudents':len(course.student),
-                'CourseCapacity':course.CourseCapacity,
+                'CourseDept':course.Teachers[0].dept.DeptName,
             }
             tables.append(table)
         return render_template('student/course.html', tables=tables, course_selected=course_selected)
@@ -191,20 +209,28 @@ def course_drop(CourseNum):
             flash('您已成功退选该门课程。')
         return redirect(url_for('course_select_table'))
 
-@app.route('/course_select/<CourseNum>', methods=['GET',])
+@app.route('/course_select/<CourseNum>/<TeacherNum>', methods=['GET',])
 @login_required
-def course_select(CourseNum):
+def course_select(CourseNum, TeacherNum):
     if isinstance(current_user._get_current_object(), Student):
         Courses = current_user.Courses
         course_selected = [Course_.CourseNum for Course_ in Courses]
         if  CourseNum in course_selected:
             flash('错误：您已选课程中存在该门课程！')
         else:
-            course = Course.query.filter_by(CourseNum=CourseNum).first()
-            current_user.select_course(course)
+            course_select = Course_select_table(current_user.StudentNum, CourseNum, TeacherNum)
+            db.session.add(course_select)
             db.session.commit()
             flash('您已成功选择该门课程。')
         return redirect(url_for('course'))
+
+@app.route('/course_change/<CourseNum>', methods=['GET',])
+@login_required
+def course_change(CourseNum):
+    if isinstance(current_user._get_current_object(), Student):
+        current_user.drop_course(CourseNum)
+        db.session.commit()
+        return redirect(url_for('course_teachers', CourseNum=CourseNum))
 
 @app.route('/grade_query', methods=['GET',])
 @login_required
@@ -214,8 +240,8 @@ def grade_query():
         tables = []
         for Course_ in Courses:
             course = Course.query.filter_by(CourseNum=Course_.CourseNum).first()
-            teacher = Teacher.query.filter_by(CourseNum=Course_.CourseNum).first()
-            course_select_table = Course_select_table.query.filter_by(StudentNum=current_user.StudentNum, CourseNum=course.CourseNum).first()
+            course_select_table = Course_select_table.query.filter_by(StudentNum=current_user.StudentNum, CourseNum=Course_.CourseNum).first()
+            teacher = Teacher.query.filter_by(TeacherNum=course_select_table.TeacherNum).first()
             table = {
                 'CourseNum':Course_.CourseNum,
                 'CourseName':course.CourseName,
@@ -242,68 +268,77 @@ def dept_info():
 @login_required
 def course_select_detail():
     if isinstance(current_user._get_current_object(), Teacher):
-        course = Course.query.filter_by(CourseNum=current_user.CourseNum).first()
-        Students = course.student
-        course_info = {
-            'CourseNum':course.CourseNum,
-            'CourseName':course.CourseName,
-            'CourseStudents':len(Students),
-        }
-        tables = []
-        for Student in Students:
-            major = Major.query.filter_by(MajorNum=Student.MajorNum).first()
-            dept = major.dept
-            table = {
-                'StudentNum':Student.StudentNum,
-                'StudentName':Student.StudentName,
-                'StudentSex':Student.StudentSex,
-                'DeptName':dept.DeptName,
-                'MajorName':major.MajorName
+        courses = current_user.Courses
+        course_tables = []
+        for course in courses:
+            course_select_tables = Course_select_table.query.filter_by(CourseNum=course.CourseNum, TeacherNum=current_user.TeacherNum).all()
+            course_info = {
+                'CourseNum':course.CourseNum,
+                'CourseName':course.CourseName,
+                'CourseStudents':len(course_select_tables),
             }
-            tables.append(table)
-        return render_template('teacher/course_select_detail.html', tables=tables, course_info=course_info)
+            tables = []
+            for course_select_table in course_select_tables:
+                student = Student.query.filter_by(StudentNum=course_select_table.StudentNum).first()
+                table = {
+                    'StudentNum':student.StudentNum,
+                    'StudentName':student.StudentName,
+                    'StudentSex':student.StudentSex,
+                    'DeptName':student.major.dept.DeptName,
+                    'MajorName':student.major.MajorName,
+                }
+                tables.append(table)
+            course_tables.append([course_info,tables])
+        return render_template('teacher/course_select_detail.html', course_tables=course_tables)
 
-@app.route('/course_grade_input', methods=['GET', 'POST'])
+@app.route('/course_grade_input/<CourseNum>', methods=['GET', 'POST'])
+@app.route('/course_grade_input', defaults={'CourseNum':0})
 @login_required
-def course_grade_input():
+def course_grade_input(CourseNum):
     if isinstance(current_user._get_current_object(), Teacher):
-        course = Course.query.filter_by(CourseNum=current_user.CourseNum).first()
-        Students = course.student
         if request.method == 'POST':
-            for Student in Students:
-                course_select_table = Course_select_table.query.filter_by(StudentNum=Student.StudentNum, CourseNum=course.CourseNum).first()
-                if not course_select_table.Grade:                
-                    grade = request.form[Student.StudentNum]
+            course = Course.query.filter_by(CourseNum=CourseNum).first()
+            course_select_tables = Course_select_table.query.filter_by(CourseNum=course.CourseNum, TeacherNum=current_user.TeacherNum).all()                            
+            for course_select_table in course_select_tables:
+                student = Student.query.filter_by(StudentNum=course_select_table.StudentNum).first()
+                if not course_select_table.Grade:
+                    grade = request.form[student.StudentNum]
                     course_select_table.input_grade(grade)
             db.session.commit()
             flash('成绩录入成功！')
             return redirect(url_for('course_grade_input'))
         else:
-            course_info = {
-                'CourseNum':course.CourseNum,
-                'CourseName':course.CourseName,
-                'CourseStudents':len(Students),
-            }
-            tables = []
-            for Student in Students:
-                major = Major.query.filter_by(MajorNum=Student.MajorNum).first()
-                dept = major.dept
-                course_select_table = Course_select_table.query.filter_by(StudentNum=Student.StudentNum, CourseNum=course_info['CourseNum']).first()
-                table = {
-                    'StudentNum':Student.StudentNum,
-                    'StudentName':Student.StudentName,
-                    'StudentSex':Student.StudentSex,
-                    'DeptName':dept.DeptName,
-                    'MajorName':major.MajorName,
-                    'Grade':course_select_table.Grade
+            courses = current_user.Courses
+            course_tables = []
+            for course in courses:
+                flag = 0
+                course_select_tables = Course_select_table.query.filter_by(CourseNum=course.CourseNum, TeacherNum=current_user.TeacherNum).all()                
+                course_info = {
+                    'CourseNum':course.CourseNum,
+                    'CourseName':course.CourseName,
+                    'CourseStudents':len(course_select_tables),
                 }
-                tables.append(table)
-        return render_template('teacher/course_grade_input.html', tables=tables, course_info=course_info)
+                tables = []
+                for course_select_table in course_select_tables:
+                    student = Student.query.filter_by(StudentNum=course_select_table.StudentNum).first()
+                    table = {
+                        'StudentNum':student.StudentNum,
+                        'StudentName':student.StudentName,
+                        'StudentSex':student.StudentSex,
+                        'DeptName':student.major.dept.DeptName,
+                        'MajorName':student.major.MajorName,
+                        'Grade':course_select_table.Grade
+                    }
+                    if not table['Grade']:
+                        flag = 1
+                    tables.append(table)
+                course_tables.append([course_info, tables, flag])
+        return render_template('teacher/course_grade_input.html', course_tables=course_tables)
 
-@app.route('/grade_set_zero/<StudentNum>')
-def grade_set_zero(StudentNum):
+@app.route('/grade_set_zero/<CourseNum>/<StudentNum>')
+def grade_set_zero(CourseNum, StudentNum):
     if isinstance(current_user._get_current_object(), Teacher):
-        course_select_table = Course_select_table.query.filter_by(StudentNum=StudentNum, CourseNum=current_user.CourseNum).first()
+        course_select_table = Course_select_table.query.filter_by(StudentNum=StudentNum, CourseNum=CourseNum).first()
         course_select_table.input_grade(None)
         db.session.commit()
         return redirect(url_for('course_grade_input'))

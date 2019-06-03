@@ -1,0 +1,38 @@
+{% extends "student/student.html" %}
+
+{% block app_content %}
+<div class="container mb-4"></div>
+<h1 class="display-6" align="center">选择任课老师</h1>
+<table class="table table-striped table-hover">
+    <thead class="thead-dark">
+    <tr>
+        <th class="lead">课程名</th>
+        <th class="lead">任课教师</th>
+        <th class="lead">上课时间</th>
+        <th class="lead">课程容量</th>
+        <th class="lead">已选</th>
+        <th class="lead"></th>
+    </tr>
+        </thead>
+        <tbody>
+    {% if tables %}
+    {% for table in tables %}
+    <tr>
+       <td class="lead">{{ table.CourseName }}</td>
+       <td class="lead">{{ table.TeacherName }}</td>
+       <td class="lead">{{ table.Time }}</td>
+       <td class="lead">{{ table.CourseCapacity }}人</td>
+       <td class="lead">{{ table.CourseStudents }}人</td>
+       {% if table.CourseCapacity <= table.CourseStudents %}
+       <td class="lead">人数已满</td>
+       {% else %}
+       <td class="lead"><a href="{{ url_for('course_select', CourseNum=table.CourseNum, TeacherNum=table.TeacherNum) }}" class="btn btn-outline-success btn-sm" role="button">选课</a></td>
+       {% endif %}
+    </tr>
+    {% endfor %}
+    {% endif %}
+</tbody>
+</table>
+<a href="{{ url_for('course') }}" class="btn btn-outline-success btn-lg btn-block" role="button">返回</a>
+
+{% endblock %}

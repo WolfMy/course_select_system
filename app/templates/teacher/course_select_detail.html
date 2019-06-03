@@ -2,9 +2,13 @@
 
 {% block app_content %}
     <div class="container mb-4"></div>
-    <p class="lead"><strong>课程号：</strong>{{ course_info.CourseNum }}</p>
-    <p class="lead"><strong>课程名：</strong>{{ course_info.CourseName }}</p>
-    <p class="lead"><strong>选课人数：</strong>{{ course_info.CourseStudents }}</p>
+    {% if course_tables %}
+    {% for course_table in course_tables %}
+    <div class="container mb-5">
+    <hr>
+    <p class="lead"><strong>课程号：</strong>{{ course_table[0].CourseNum }}</p>
+    <p class="lead"><strong>课程名：</strong>{{ course_table[0].CourseName }}</p>
+    <p class="lead"><strong>选课人数：</strong>{{ course_table[0].CourseStudents }}</p>
     <table class="table table-striped table-hover">
         <thead class="thead-dark">
         <tr>
@@ -16,8 +20,8 @@
         </tr>
         </thead>
         <tbody>
-        {% if tables %}
-        {% for table in tables %}
+        {% if course_table[1] %}
+        {% for table in course_table[1] %}
         <tr>
            <td class="lead">{{ table.StudentNum }}</td>
            <td class="lead">{{ table.StudentName }}</td>
@@ -29,5 +33,7 @@
         {% endif %}
         </tbody>
     </table>
-
+    </div>
+    {% endfor %}
+    {% endif %}
 {% endblock %}

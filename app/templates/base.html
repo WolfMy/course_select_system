@@ -17,15 +17,15 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup" role="navigation">
         <ul class="navbar-nav mr-auto lead">
-        {% block a0 %}{% endblock %}
-        {% block a1 %}{% endblock %}
-        {% block a2 %}{% endblock %}
-        {% block a3 %}{% endblock %}
-        {% block a4 %}{% endblock %}
-        {% block a5 %}{% endblock %}
-        {% block a6 %}{% endblock %}
+        <li class="active">{% block a0 %}{% endblock %}</li>
+        <li>{% block a1 %}{% endblock %}</li>
+        <li>{% block a2 %}{% endblock %}</li>
+        <li>{% block a3 %}{% endblock %}</li>
+        <li>{% block a4 %}{% endblock %}</li>
+        <li>{% block a5 %}{% endblock %}</li>
+        <li>{% block a6 %}{% endblock %}</li>
         </ul>
         <a class="btn btn-danger " href="{{ url_for('logout') }}">退出系统</a>
         
