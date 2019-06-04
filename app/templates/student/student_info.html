@@ -6,9 +6,7 @@
         <p class="lead">姓名：{{ current_user.StudentName }}</p>
         <p class="lead">学号：{{ current_user.StudentNum }}</p>
         <p class="lead">性别：{{ current_user.StudentSex }}</p>
-        {% if current_user.StudentBirthday %}
-        <p class="lead">生日：{{ current_user.StudentBirthday }}</p>
-        {% endif %}
+        <p class="lead">入学年份：{{ current_user.StudentInyear }}年</p>
         <p class="lead">专业：{{ current_user.major.MajorName }}</p>
         <p class="lead">学院：{{ current_user.major.dept.DeptName }}</p>
         <hr class="my-4">

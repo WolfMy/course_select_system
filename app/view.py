@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template, request, flash, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models_new import Student, Teacher, Manager, Course, Course_select_table, Course_Teacher, Major
+from app.models_new import Student, Teacher, Manager, Course, Course_select_table, Course_Teacher, Major, Dept
 from app.forms import EditProfileForm
 from app import db
 
@@ -190,7 +190,7 @@ def course():
                 'CourseName':course.CourseName,
                 'CourseCredit':course.CourseCredit,
                 'CourseTime':course.CourseTime,
-                'CourseDept':course.Teachers[0].dept.DeptName,
+                'CourseDept':course.dept.DeptName
             }
             tables.append(table)
         return render_template('student/course.html', tables=tables, course_selected=course_selected)
@@ -346,12 +346,72 @@ def grade_set_zero(CourseNum, StudentNum):
 @app.route('/student_manage', methods=['GET', 'POST'])
 @login_required
 def student_manage():
-    return render_template('admin/student_manage.html')
+    if isinstance(current_user._get_current_object(), Manager):
+        info = {
+            'majors': [major.MajorName for major in Major.query.all()]
+        }
+        students = Student.query.order_by(Student.MajorNum).all()
+        return render_template('admin/student_manage.html', info=info, students=students)
+
+@app.route('/add_student', methods=['POST',])
+@login_required
+def add_student():
+    if isinstance(current_user._get_current_object(), Manager):
+        if request.method == 'POST':
+            StudentNum = request.form['StudentNum']
+            MajorName = request.form['MajorName']
+            MajorNum = Major.query.filter_by(MajorName=MajorName).first().MajorNum
+            StudentName = request.form['StudentName']
+            StudentSex = request.form['StudentSex']
+            StudentInyear = request.form['StudentInyear']
+            student = Student(StudentNum, MajorNum, StudentName, StudentSex, StudentInyear)
+            db.session.add(student)
+            db.session.commit()
+            flash('录入学生信息成功！')
+        return redirect(url_for('student_manage'))
+
+@app.route('/delete_student/<StudentNum>', methods=['GET', 'POST'])
+@login_required
+def delete_student(StudentNum):
+    if isinstance(current_user._get_current_object(), Manager):
+        delete_stu = Student.query.filter_by(StudentNum=StudentNum).first()
+        # 先删除选课表中信息
+        course_tables = Course_select_table.query.filter_by(StudentNum=StudentNum).all()
+        for course_table in course_tables:
+            db.session.delete(course_table)
+        db.session.commit()
+        db.session.delete(delete_stu)
+        db.session.commit()
+        flash('删除学生成功！')
+        return redirect(url_for('student_manage'))
 
 @app.route('/teacher_manage', methods=['GET', 'POST'])
 @login_required
 def teacher_manage():
-    return render_template('admin/teacher_manage.html')
+    if isinstance(current_user._get_current_object(), Manager):
+        info = {
+            'depts': [dept.DeptName for dept in Dept.query.all()]
+        }
+        teachers = Teacher.query.order_by(Teacher.DeptNum).all()
+        return render_template('admin/teacher_manage.html', info=info, teachers=teachers)
+
+@app.route('/add_teacher', methods=['POST',])
+@login_required
+def add_teacher():
+    if isinstance(current_user._get_current_object(), Manager):
+        if request.method == 'POST':
+            TeacherNum = request.form['TeacherNum']
+            DeptName = request.form['DeptName']
+            DeptNum = Dept.query.filter_by(DeptName=DeptName).first().DeptNum
+            TeacherName = request.form['TeacherName']
+            TeacherSex = request.form['TeacherSex']
+            TeacherTitle = request.form['TeacherTitle']
+            TeacherInyear = request.form['TeacherInyear']
+            teacher = Teacher(TeacherNum, DeptNum, TeacherName, TeacherSex, TeacherInyear, TeacherTitle)
+            db.session.add(teacher)
+            db.session.commit()
+            flash('录入教师信息成功！')
+        return redirect(url_for('teacher_manage'))
 
 @app.route('/course_manage', methods=['GET', 'POST'])
 @login_required
@@ -361,4 +421,64 @@ def course_manage():
 @app.route('/course_select_manage', methods=['GET', 'POST'])
 @login_required
 def course_select_manage():
-    return render_template('admin/course_select_manage.html')
+    if isinstance(current_user._get_current_object(), Manager):
+        course_teachers = Course_Teacher.query.order_by(Course_Teacher.CourseNum).all()
+        tables = []
+        for course_teacher in course_teachers:
+            course = Course.query.filter_by(CourseNum=course_teacher.CourseNum).first()
+            teacher = Teacher.query.filter_by(TeacherNum=course_teacher.TeacherNum).first()
+            course_select_tables = Course_select_table.query.filter_by(CourseNum=course.CourseNum, TeacherNum=teacher.TeacherNum).all()                
+            table = {
+                'CourseNum':course.CourseNum,
+                'CourseName':course.CourseName,
+                'TeacherNum':teacher.TeacherNum,
+                'TeacherName':teacher.TeacherName,
+                'CourseCapacity':course_teacher.CourseCapacity,
+                'CourseStudents':len(course_select_tables),
+            }
+            tables.append(table)
+    return render_template('admin/course_select_manage.html', tables=tables)
+
+@app.route('/course_delete/<CourseNum>/<TeacherNum>')
+@login_required
+def course_delete(CourseNum, TeacherNum):
+    if isinstance(current_user._get_current_object(), Manager):
+        # 先删除选课信息
+        course_select_tables = Course_select_table.query.filter_by(CourseNum=CourseNum, TeacherNum=TeacherNum).all()
+        for course_select_table in course_select_tables:
+            db.session.delete(course_select_table)
+        db.session.commit()
+        # 再删除课程与老师的对应表
+        course_teacher = Course_Teacher.query.filter_by(CourseNum=CourseNum, TeacherNum=TeacherNum).first()
+        db.session.delete(course_teacher)
+        db.session.commit()
+        flash('删除课程成功！')
+    return redirect(url_for('course_select_manage'))
+
+@app.route('/add_course_select', methods=['POST',])
+@login_required
+def add_course_select():
+    if isinstance(current_user._get_current_object(), Manager):
+        if request.method == 'POST':
+            CourseNum = request.form['CourseNum']
+            TeacherNum = request.form['TeacherNum']
+            StudentNum = request.form['StudentNum']
+            course_select_table = Course_select_table(StudentNum, CourseNum, TeacherNum)
+            db.session.add(course_select_table)
+            db.session.commit()
+            flash('手动签课成功！')
+    return redirect(url_for('course_select_manage'))
+
+@app.route('/drop_course_select', methods=['POST',])
+@login_required
+def drop_course_select():
+    if isinstance(current_user._get_current_object(), Manager):
+        if request.method == 'POST':
+            CourseNum = request.form['CourseNum']
+            TeacherNum = request.form['TeacherNum']
+            StudentNum = request.form['StudentNum']
+            course_select_table = Course_select_table.query.filter_by(CourseNum=CourseNum,TeacherNum=TeacherNum,StudentNum=StudentNum).first()
+            db.session.delete(course_select_table)
+            db.session.commit()
+            flash('手动退课成功！')
+    return redirect(url_for('course_select_manage'))

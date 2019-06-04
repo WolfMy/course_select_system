@@ -1,5 +1,72 @@
 {% extends 'admin/manager.html' %}
 
 {% block app_content %}
-
+<div class="container mb-4"></div>
+<h1 class="display-6" align="center">学生管理</h1>
+<div class="container mb-4"></div>
+<form action="/add_student" method="POST">
+    <div class="form-row">
+      <div class="col">
+        <select type="text" name="MajorName" class="form-control custom-select" placeholder="专业名" required>
+            {% if info %}
+            {% for major in info.majors %}
+            <option>{{ major }}</option>
+            {% endfor %}
+            {% else %}
+            <option>无专业信息，请录入</option>
+            {% endif %}
+        </select>
+      </div>
+      <div class="col">
+        <input type="number" name="StudentNum" class="form-control" placeholder="学号" required>
+      </div>
+      <div class="col">
+        <input type="text" name="StudentName" class="form-control" placeholder="姓名" required>
+      </div>
+      <div class="col">
+        <select type="text" name="StudentSex" class="form-control custom-select" placeholder="性别" required>
+            <option>男</option>
+            <option>女</option>
+        </select>
+    </div>
+      <div class="col">
+        <input type="datetime" name="StudentInyear" class="form-control" placeholder="入学年份">
+      </div>
+      <div class="col">
+      <button type="submit" class="btn btn-block btn-success mb-2">录入</button>
+      </div>
+    </div>
+  </form>
+  <hr>
+  <div class="container mb-4"></div>
+    <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+        <tr>
+            <th class="lead">学院名</th>
+            <th class="lead">专业名</th>
+            <th class="lead">学号</th>
+            <th class="lead">姓名</th>
+            <th class="lead">性别</th>
+            <th class="lead">入学年份</th>
+            <th class="lead">学生管理</th>
+        </tr>
+            </thead>
+            <tbody>
+        {% if students %}
+        {% for student in students %}
+        <tr>
+           <td class="lead">{{ student.major.dept.DeptName }}</td>
+           <td class="lead">{{ student.major.MajorName }}</td>
+           <td class="lead">{{ student.StudentNum }}</td>
+           <td class="lead">{{ student.StudentName }}</td>
+           <td class="lead">{{ student.StudentSex }}</td>
+           <td class="lead">{{ student.StudentInyear }}年</td>
+           <td class="lead">
+            <a href="{{ url_for('delete_student', StudentNum=student.StudentNum) }}" class="btn btn-outline-danger btn-sm" role="button">删除学生</a>               
+            </td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </tbody>
+    </table>
 {% endblock %}

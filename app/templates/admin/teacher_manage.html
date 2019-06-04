@@ -1,5 +1,73 @@
 {% extends 'admin/manager.html' %}
 
 {% block app_content %}
-
+<div class="container mb-4"></div>
+<h1 class="display-6" align="center">教师管理</h1>
+<div class="container mb-4"></div>
+<form action="/add_teacher" method="POST">
+    <div class="form-row">
+      <div class="col">
+        <select type="text" name="DeptName" class="form-control custom-select" placeholder="学院名" required>
+            {% if info %}
+            {% for dept in info.depts %}
+            <option>{{ dept }}</option>
+            {% endfor %}
+            {% else %}
+            <option>无学院信息，请录入</option>
+            {% endif %}
+        </select>
+      </div>
+      <div class="col">
+        <input type="number" name="TeacherNum" class="form-control" placeholder="工号" required>
+      </div>
+      <div class="col">
+        <input type="text" name="TeacherName" class="form-control" placeholder="姓名" required>
+      </div>
+      <div class="col">
+        <select type="text" name="TeacherSex" class="form-control custom-select" placeholder="性别" required>
+            <option>男</option>
+            <option>女</option>
+        </select>
+    </div>
+    <div class="col">
+        <input type="text" name="TeacherTitle" class="form-control" placeholder="职称">
+      </div>
+      <div class="col">
+        <input type="datetime" name="TeacherInyear" class="form-control" placeholder="入职年份">
+      </div>
+      <div class="col">
+      <button type="submit" class="btn btn-block btn-success mb-2">录入</button>
+      </div>
+    </div>
+  </form>
+  <hr>
+  <div class="container mb-4"></div>
+    <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+        <tr>
+            <th class="lead">学院号</th>
+            <th class="lead">学院名</th>
+            <th class="lead">工号</th>
+            <th class="lead">姓名</th>
+            <th class="lead">性别</th>
+            <th class="lead">职称</th>
+            <th class="lead">入职年份</th>
+        </tr>
+            </thead>
+            <tbody>
+        {% if teachers %}
+        {% for teacher in teachers %}
+        <tr>
+           <td class="lead">{{ teacher.dept.DeptNum }}</td>
+           <td class="lead">{{ teacher.dept.DeptName }}</td>
+           <td class="lead">{{ teacher.TeacherNum }}</td>
+           <td class="lead">{{ teacher.TeacherName }}</td>
+           <td class="lead">{{ teacher.TeacherSex }}</td>
+           <td class="lead">{{ teacher.TeacherTitle }}</td>
+           <td class="lead">{{ teacher.TeacherInyear }}年</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </tbody>
+    </table>
 {% endblock %}

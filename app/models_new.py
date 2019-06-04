@@ -23,6 +23,7 @@ class Dept(db.Model):
     DeptDesc = db.Column(db.Text)
     Teachers = db.relationship('Teacher', backref='dept', lazy='dynamic')
     Majors = db.relationship('Major', backref='dept', lazy='dynamic')
+    Courses = db.relationship('Course', backref='dept', lazy='dynamic')
 
 class Major(db.Model):
     # 专业
@@ -63,11 +64,20 @@ class Teacher(UserMixin, db.Model):
     DeptNum = db.Column(db.String(4), db.ForeignKey('dept.DeptNum'), nullable=False)
     TeacherName = db.Column(db.String(10), nullable=False)
     TeacherSex = db.Column(db.String(2), nullable=False)
-    TeacherBirthday = db.Column(db.DateTime)
+    TeacherInyear = db.Column(db.String(4), nullable=False)
     TeacherTitle = db.Column(db.String(10))
     TeacherPassword = db.Column(db.Text, nullable=False)
     Students = db.relationship('Student', secondary='course_select_table', backref='teacher', lazy='dynamic')
     Courses = db.relationship('Course', secondary='course_teacher', backref='teacher', lazy='dynamic')
+
+    def __init__(self, TeacherNum, DeptNum, TeacherName, TeacherSex, TeacherInyear, TeacherTitle):
+        self.TeacherNum = TeacherNum
+        self.DeptNum = DeptNum
+        self.TeacherName = TeacherName
+        self.TeacherSex = TeacherSex
+        self.TeacherInyear = TeacherInyear
+        self.TeacherTitle = TeacherTitle
+        self.set_password('admin')
 
     # override
     def get_id(self):
@@ -83,9 +93,17 @@ class Student(UserMixin, db.Model):
     MajorNum = db.Column(db.String(16), db.ForeignKey('major.MajorNum'), nullable=False)
     StudentName = db.Column(db.String(10), nullable=False)
     StudentSex = db.Column(db.String(10), nullable=False)
-    StudentBirthday = db.Column(db.DateTime)
+    StudentInyear = db.Column(db.String(4), nullable=False)
     StudengtPassword = db.Column(db.Text, nullable=False)
     Courses = db.relationship('Course', secondary='course_select_table', backref='student', lazy='dynamic')
+
+    def __init__(self, StudentNum, MajorNum, StudentName, StudentSex, StudentInyear):
+        self.StudentNum = StudentNum
+        self.MajorNum = MajorNum
+        self.StudentName = StudentName
+        self.StudentSex = StudentSex
+        self.StudentInyear = StudentInyear
+        self.set_password('admin')
 
     # override
     def get_id(self):
@@ -106,6 +124,7 @@ class Course(db.Model):
     CourseTime = db.Column(db.Integer, nullable=False)
     CourseDesc = db.Column(db.Text)
     Teachers = db.relationship('Teacher', secondary='course_teacher', backref='course', lazy='dynamic') 
+    DeptNum = db.Column(db.String(4), db.ForeignKey('dept.DeptNum'), nullable=False)
 
 class Manager(UserMixin, db.Model):
     # 管理员
