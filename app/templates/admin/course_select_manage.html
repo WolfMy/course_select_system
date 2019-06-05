@@ -63,10 +63,11 @@
            <td class="lead">{{ table.CourseCapacity }}</td>
            <td class="lead">{{ table.CourseStudents }}</td>
            <td class="lead">
-              TODO
+              <a href="{{ url_for('change_course_capacity', CourseNum=table.CourseNum, TeacherNum=table.TeacherNum, add_or_sub='add') }}" class="btn btn-success btn-sm" role="button">扩容</a>
+              <a href="{{ url_for('change_course_capacity', CourseNum=table.CourseNum, TeacherNum=table.TeacherNum, add_or_sub='sub') }}" class="btn btn-warning btn-sm" role="button">缩容</a>
            </td>
            <td class="lead">
-                <a href="{{ url_for('course_delete', CourseNum=table.CourseNum, TeacherNum=table.TeacherNum) }}" class="btn btn-outline-danger btn-sm" role="button">删除课程</a>
+                <a href="{{ url_for('course_teacher_delete', CourseNum=table.CourseNum, TeacherNum=table.TeacherNum) }}" class="btn btn-outline-danger btn-sm" role="button">删除开设课程</a>
            </td>
         </tr>
         {% endfor %}

@@ -30,22 +30,37 @@
             <td class="lead">{{ table.StudentSex }}</td>
             <td class="lead">{{ table.DeptName }}</td>
             <td class="lead">{{ table.MajorName }}</td>
-            <td class="lead">
-                {% if table.Grade %}
-                <div class="row clearfix">
-                    <div class="col-md-5 column">
-                        <strong>{{ table.Grade }}</strong>
+            {% if table.Grade %}
+                {% if table.Grade < 60 %}
+                <td class="lead table-danger">
+                    <div class="row clearfix">
+                        <div class="col-md-5 column">
+                            <strong>{{ table.Grade }}</strong>
+                        </div>
+                        <div class="col-md-7 column">
+                            <a  class="btn btn-primary btn-sm" href="{{ url_for('grade_set_zero', CourseNum=course_table[0].CourseNum, StudentNum=table.StudentNum) }}">重置成绩</a>
+                        </div>
                     </div>
-                    <div class="col-md-7 column">
-                        <a  class="btn btn-danger btn-sm" href="{{ url_for('grade_set_zero', CourseNum=course_table[0].CourseNum, StudentNum=table.StudentNum) }}">重置成绩</a>
-                    </div>
-                </div>
+                </td>
                 {% else %}
+                <td class="lead">
+                    <div class="row clearfix">
+                        <div class="col-md-5 column">
+                            <strong>{{ table.Grade }}</strong>
+                        </div>
+                        <div class="col-md-7 column">
+                            <a  class="btn btn-outline-danger btn-sm" href="{{ url_for('grade_set_zero', CourseNum=course_table[0].CourseNum, StudentNum=table.StudentNum) }}">重置成绩</a>
+                        </div>
+                    </div>
+                </td>
+                {% endif %}
+            {% else %}
+            <td class="lead">
                 <div class="input-group input-group-sm"> 
                     <input type="number" class="form-control" max=100 min=0 required>
                 </div>
-                {% endif %}
             </td>
+            {% endif %}
             </tr>
             {% endfor %}
             {% endif %}

@@ -7,7 +7,7 @@ from app import login
 def load_user(Num):
     if len(Num) == 8:
         return Student.query.get(int(Num))
-    elif len(Num) == 5:
+    elif len(Num) == 4:
         return Teacher.query.get(int(Num))
     elif len(Num) == 3:
         return Manager.query.get(int(Num))
@@ -57,6 +57,11 @@ class Course_Teacher(db.Model):
     TeacherNum = db.Column(db.String(10), db.ForeignKey('teacher.TeacherNum'), primary_key=True, nullable=False)
     #Time = db.Column(db.Text)
     CourseCapacity = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, CourseNum, TeacherNum, CourseCapacity):
+        self.CourseNum = CourseNum
+        self.TeacherNum = TeacherNum
+        self.CourseCapacity = CourseCapacity
 
 class Teacher(UserMixin, db.Model):
     # 教师
@@ -125,6 +130,15 @@ class Course(db.Model):
     CourseDesc = db.Column(db.Text)
     Teachers = db.relationship('Teacher', secondary='course_teacher', backref='course', lazy='dynamic') 
     DeptNum = db.Column(db.String(4), db.ForeignKey('dept.DeptNum'), nullable=False)
+
+    def __init__(self, CourseNum, CourseName, CourseCredit, CourseTime, DeptNum, CourseDesc):
+        self.CourseNum = CourseNum
+        self.CourseName = CourseName
+        self.CourseCredit = CourseCredit
+        self.CourseTime = CourseTime
+        self.DeptNum = DeptNum
+        self.CourseDesc = CourseDesc
+       
 
 class Manager(UserMixin, db.Model):
     # 管理员

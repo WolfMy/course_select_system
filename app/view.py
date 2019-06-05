@@ -364,10 +364,13 @@ def add_student():
             StudentName = request.form['StudentName']
             StudentSex = request.form['StudentSex']
             StudentInyear = request.form['StudentInyear']
-            student = Student(StudentNum, MajorNum, StudentName, StudentSex, StudentInyear)
-            db.session.add(student)
-            db.session.commit()
-            flash('录入学生信息成功！')
+            if not Student.query.filter_by(StudentNum=StudentNum).first():
+                student = Student(StudentNum, MajorNum, StudentName, StudentSex, StudentInyear)
+                db.session.add(student)
+                db.session.commit()
+                flash('录入学生信息成功！')
+            else:
+                flash('学号%s已存在！'%(StudentNum))
         return redirect(url_for('student_manage'))
 
 @app.route('/delete_student/<StudentNum>', methods=['GET', 'POST'])
@@ -407,16 +410,89 @@ def add_teacher():
             TeacherSex = request.form['TeacherSex']
             TeacherTitle = request.form['TeacherTitle']
             TeacherInyear = request.form['TeacherInyear']
-            teacher = Teacher(TeacherNum, DeptNum, TeacherName, TeacherSex, TeacherInyear, TeacherTitle)
-            db.session.add(teacher)
-            db.session.commit()
-            flash('录入教师信息成功！')
+            if not Teacher.query.filter_by(TeacherNum=TeacherNum).first():
+                teacher = Teacher(TeacherNum, DeptNum, TeacherName, TeacherSex, TeacherInyear, TeacherTitle)
+                db.session.add(teacher)
+                db.session.commit()
+                flash('录入教师信息成功！')
+            else:
+                flash('工号%s已存在!'%(TeacherNum))
         return redirect(url_for('teacher_manage'))
 
 @app.route('/course_manage', methods=['GET', 'POST'])
 @login_required
 def course_manage():
-    return render_template('admin/course_manage.html')
+    if isinstance(current_user._get_current_object(), Manager):
+        info = {
+            'depts':[dept.DeptName for dept in Dept.query.all()],
+            'courses':[course.CourseName for course in Course.query.all()],
+            'teachers':[teacher.TeacherName for teacher in Teacher.query.all()],
+        }
+        courses = Course.query.order_by(Course.CourseNum).all()
+    return render_template('admin/course_manage.html', info=info, courses=courses)
+
+@app.route('/add_course', methods=['POST',])
+@login_required
+def add_course():
+    if isinstance(current_user._get_current_object(), Manager):
+        if request.method == 'POST':
+            CourseName = request.form['CourseName']
+            CourseNum = request.form['CourseNum']
+            DeptName = request.form['DeptName']
+            DeptNum = Dept.query.filter_by(DeptName=DeptName).first().DeptNum
+            CourseCredit = request.form['CourseCredit']
+            CourseTime = request.form['CourseTime']
+            CourseDesc = request.form['CourseDesc']
+            if not Course.query.filter_by(CourseNum=CourseNum).first():
+                course = Course(CourseNum, CourseName, CourseCredit, CourseTime, DeptNum, CourseDesc)
+                db.session.add(course)
+                db.session.commit()
+                flash('创建课程成功！')
+            else:
+                flash('课程号"%s"重复，请修改课程号！'%(CourseNum))
+        return redirect(url_for('course_manage'))
+
+@app.route('/add_course_teacher', methods=['POST',])
+@login_required
+def add_course_teacher():
+    if isinstance(current_user._get_current_object(), Manager):
+        if request.method == 'POST':
+            CourseName = request.form['CourseName']
+            CourseNum = Course.query.filter_by(CourseName=CourseName).first().CourseNum
+            TeacherName = request.form['TeacherName']
+            TeacherNum = Teacher.query.filter_by(TeacherName=TeacherName).first().TeacherNum
+            CourseCapacity = request.form['CourseCapacity']
+            if not Course_Teacher.query.filter_by(CourseNum=CourseNum, TeacherNum=TeacherNum).first():
+                course_teacher = Course_Teacher(CourseNum, TeacherNum, CourseCapacity)
+                db.session.add(course_teacher)
+                db.session.commit()
+                flash('开设课程成功！')
+            else:
+                flash('%s老师已开设"%s"课程，请勿重复添加！'%(TeacherName, CourseName))
+        return redirect(url_for('course_manage'))
+
+@app.route('/course_delete/<CourseNum>')
+@login_required
+def course_delete(CourseNum):
+    if isinstance(current_user._get_current_object(), Manager):
+        # 先删除选课信息
+        course_select_tables = Course_select_table.query.filter_by(CourseNum=CourseNum).all()
+        for course_select_table in course_select_tables:
+            db.session.delete(course_select_table)
+        db.session.commit()
+        flash('删除学生选课信息成功！')
+        # 再删除课程与老师的对应表
+        course_teachers = Course_Teacher.query.filter_by(CourseNum=CourseNum).all()
+        for course_teacher in course_teachers:
+            db.session.delete(course_teacher)
+        db.session.commit()
+        flash('删除教师开设课程成功！')
+        # 最后删除课程
+        course = Course.query.filter_by(CourseNum=CourseNum).first()
+        db.session.delete(course)
+        db.session.commit()
+        flash('删除课程成功！')
+    return redirect(url_for('course_manage'))
 
 @app.route('/course_select_manage', methods=['GET', 'POST'])
 @login_required
@@ -439,20 +515,21 @@ def course_select_manage():
             tables.append(table)
     return render_template('admin/course_select_manage.html', tables=tables)
 
-@app.route('/course_delete/<CourseNum>/<TeacherNum>')
+@app.route('/course_teacher_delete/<CourseNum>/<TeacherNum>')
 @login_required
-def course_delete(CourseNum, TeacherNum):
+def course_teacher_delete(CourseNum, TeacherNum):
     if isinstance(current_user._get_current_object(), Manager):
         # 先删除选课信息
         course_select_tables = Course_select_table.query.filter_by(CourseNum=CourseNum, TeacherNum=TeacherNum).all()
         for course_select_table in course_select_tables:
             db.session.delete(course_select_table)
         db.session.commit()
+        flash('删除学生选课信息成功！')
         # 再删除课程与老师的对应表
         course_teacher = Course_Teacher.query.filter_by(CourseNum=CourseNum, TeacherNum=TeacherNum).first()
         db.session.delete(course_teacher)
         db.session.commit()
-        flash('删除课程成功！')
+        flash('删除教师开设课程成功！')
     return redirect(url_for('course_select_manage'))
 
 @app.route('/add_course_select', methods=['POST',])
@@ -463,10 +540,13 @@ def add_course_select():
             CourseNum = request.form['CourseNum']
             TeacherNum = request.form['TeacherNum']
             StudentNum = request.form['StudentNum']
-            course_select_table = Course_select_table(StudentNum, CourseNum, TeacherNum)
-            db.session.add(course_select_table)
-            db.session.commit()
-            flash('手动签课成功！')
+            if not Course_select_table.query.filter_by(CourseNum=CourseNum,StudentNum=StudentNum).first():
+                course_select_table = Course_select_table(StudentNum, CourseNum, TeacherNum)
+                db.session.add(course_select_table)
+                db.session.commit()
+                flash('手动签课成功！')
+            else:
+                flash('手动签课失败！该学生已选择该门课程！')
     return redirect(url_for('course_select_manage'))
 
 @app.route('/drop_course_select', methods=['POST',])
@@ -478,7 +558,24 @@ def drop_course_select():
             TeacherNum = request.form['TeacherNum']
             StudentNum = request.form['StudentNum']
             course_select_table = Course_select_table.query.filter_by(CourseNum=CourseNum,TeacherNum=TeacherNum,StudentNum=StudentNum).first()
-            db.session.delete(course_select_table)
-            db.session.commit()
-            flash('手动退课成功！')
+            if course_select_table:
+                db.session.delete(course_select_table)
+                db.session.commit()
+                flash('手动退课成功！')
+            else:
+                flash('手动退课失败！学生(%s)未选择教师(%s)的课程(%s)'%(StudentNum,TeacherNum,CourseNum))
+    return redirect(url_for('course_select_manage'))
+
+@app.route('/change_course_capacity/<CourseNum>/<TeacherNum>/<add_or_sub>', methods=['GET',])
+@login_required
+def change_course_capacity(CourseNum, TeacherNum, add_or_sub):
+    if isinstance(current_user._get_current_object(), Manager):
+        course_teacher = Course_Teacher.query.filter_by(CourseNum=CourseNum, TeacherNum=TeacherNum).first()
+        if add_or_sub == 'add':
+            course_teacher.CourseCapacity += 10
+            flash('课程容量扩容10人！')
+        elif add_or_sub == 'sub':
+            course_teacher.CourseCapacity -= 10
+            flash('课程容量缩容10人！')
+        db.session.commit()
     return redirect(url_for('course_select_manage'))
