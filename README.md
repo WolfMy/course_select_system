@@ -1,5 +1,13 @@
 [TOC]
 
+> 展示网站: <https://120.27.192.52:4070>
+>
+> 首先用管理员账户登陆（帐号admin，密码admin）
+>
+> 创建自己的8位学号，默认密码admin。
+>
+> 再用自己学号登陆选课系统进行体验。
+
 ##一、Python_Flask的初始化（Bootstrap框架、SQLalchemy的ORM框架、数据库迁移工具）
 
 ```python
