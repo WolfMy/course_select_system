@@ -7,7 +7,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-5">
-            <h3 align="center">创建课程</h1>
+            <h1 align="center">创建课程</h1>
             <br>
             <form action="/add_course" method="POST">
                 <div class="row">
@@ -110,6 +110,7 @@
                     <th class="lead">课程名</th>
                     <th class="lead">课程学分</th>
                     <th class="lead">课程学时</th>
+                    <th class="lead">开课学院</th>
                     <th class="lead">教师号</th>
                     <th class="lead">教师名</th>
                     <th class="lead">课程管理</th>
@@ -123,6 +124,7 @@
                    <td class="lead">{{ course.CourseName }}</td>
                    <td class="lead">{{ course.CourseCredit }}</td>
                    <td class="lead">{{ course.CourseTime }}</td>
+                   <td class="lead">{{ course.dept.DeptName }}</td>
                    <td class="lead">
                         {% if course.Teachers %}
                             {% for teacher in course.Teachers %}
