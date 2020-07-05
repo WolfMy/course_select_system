@@ -1,0 +1,60 @@
+{% extends "student/student.html" %}
+
+{% block app_content %}
+<div class="container mb-4"></div>
+<h1 class="display-6" align="center">志愿填选</h1>
+<div class="row">
+    <div class="col-md-4">
+        <p class="lead" style="color: red;">本学期权重: 80</p>
+    </div>
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <button class="btn btn-block btn-outline-success">添加志愿</button>
+    </div>
+</div>
+<div class="container mb-4"></div>
+<table class="table table-striped table-hover">
+    <thead class="thead-dark">
+    <tr>
+        <th class="lead">志愿顺序</th>
+        <th class="lead">课程号</th>
+        <th class="lead">课程名</th>
+        <th class="lead">状态</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="lead">1</td>
+        <td class="lead">9</td>
+        <td class="lead">数学分析</td>
+        <td class="lead">已选上</td>
+    </tr>
+    <tr>
+        <td class="lead">2</td>
+        <td class="lead">5</td>
+        <td class="lead">密码学</td>
+        <td class="lead">已提交</td>
+    </tr>
+    <tr>
+        <td class="lead">3</td>
+        <td class="lead">6</td>
+        <td class="lead">数据结构(甲)</td>
+        <td class="lead">已提交</td>
+    </tr>
+    <tr>
+        <td class="lead">4</td>
+        <td class="lead">3</td>
+        <td class="lead">Linux系统</td>
+        <td class="lead">未选上</td>
+    </tr>
+    </tbody>
+</table>
+<div class="container mb-4"></div>
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <button class="btn btn-block btn-success">提交志愿</button>
+    </div>
+</div>
+
+{% endblock %}

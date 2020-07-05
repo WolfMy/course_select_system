@@ -579,3 +579,8 @@ def change_course_capacity(CourseNum, TeacherNum, add_or_sub):
             flash('课程容量缩容10人！')
         db.session.commit()
     return redirect(url_for('course_select_manage'))
+
+@app.route('/voluntary_selection')
+@login_required
+def voluntary_selection():
+    return render_template('student/voluntary_selection.html')
