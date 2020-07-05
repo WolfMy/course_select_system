@@ -114,7 +114,4 @@ dmypy.json
 .pyre/
 
 .DS_Store
-/.vscode/
-app/static/.DS_Store
 *.out
-app/static/.DS_Store
