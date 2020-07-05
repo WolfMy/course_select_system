@@ -33,7 +33,7 @@
 
 在此基础上，添加了"记住我"的登陆选项。
 
-![image-20190611213905119](/Users/mouyu/Library/Application Support/typora-user-images/image-20190611213905119.png)
+   ![image](https://github.com/WolfMy/course_select_system/blob/master/image/Login.png)
 
 
 ## 四、学生界面的功能简述
@@ -46,13 +46,13 @@
 
 4. 查询已选课程的成绩
 
-   ![image-20190611214328463](/Users/mouyu/Library/Application Support/typora-user-images/image-20190611214328463.png)
+   ![image](https://github.com/WolfMy/course_select_system/blob/master/image/Student.png)
 
-   ![image-20190611214216601](/Users/mouyu/Library/Application Support/typora-user-images/image-20190611214216601.png)
+   ![image](https://github.com/WolfMy/course_select_system/blob/master/image/SelectedCourse.png)
 
-   ![image-20190611214238123](/Users/mouyu/Library/Application Support/typora-user-images/image-20190611214238123.png)
+   ![image](https://github.com/WolfMy/course_select_system/blob/master/image/AllCourse.png)
 
-   ![image-20190611214255516](/Users/mouyu/Library/Application Support/typora-user-images/image-20190611214255516.png)
+   ![image](https://github.com/WolfMy/course_select_system/blob/master/image/GradeInquiry.png)
 
 
 ## 五、教师界面功能简述
@@ -63,11 +63,11 @@
 
 3. 为此教师开设课程中的学生，录入此门课程的成绩，支持录入后修改成绩的功能
 
-   ![image-20190611214409671](/Users/mouyu/Library/Application Support/typora-user-images/image-20190611214409671.png)
-
-   ![image-20190611214434016](/Users/mouyu/Library/Application Support/typora-user-images/image-20190611214434016.png)
-
-   ![image-20190611214444999](/Users/mouyu/Library/Application Support/typora-user-images/image-20190611214444999.png)
+   ![image](https://github.com/WolfMy/course_select_system/blob/master/image/Teacher.png)
+   
+   ![image](https://github.com/WolfMy/course_select_system/blob/master/image/TeacherCourse.png)
+   
+   ![image](https://github.com/WolfMy/course_select_system/blob/master/image/GradeInput.png)
 
 
 ## 六、管理员界面简述
@@ -90,12 +90,12 @@
    - 修改课程容量
    - 删除此开设课程
 
-![image-20190611214508267](/Users/mouyu/Library/Application Support/typora-user-images/image-20190611214508267.png)
+   ![image](https://github.com/WolfMy/course_select_system/blob/master/image/StuManage.png)
 
-![image-20190611214535166](/Users/mouyu/Library/Application Support/typora-user-images/image-20190611214535166.png)
+   ![image](https://github.com/WolfMy/course_select_system/blob/master/image/TeacherManage.png)
 
-![image-20190611214543382](/Users/mouyu/Library/Application Support/typora-user-images/image-20190611214543382.png)
+   ![image](https://github.com/WolfMy/course_select_system/blob/master/image/CourseManage.png)
 
-![image-20190611214552924](/Users/mouyu/Library/Application Support/typora-user-images/image-20190611214552924.png)
+   ![image](https://github.com/WolfMy/course_select_system/blob/master/image/CourseManage2.png)
 
-![image-20190611214617197](/Users/mouyu/Library/Application Support/typora-user-images/image-20190611214617197.png)
+   ![image](https://github.com/WolfMy/course_select_system/blob/master/image/SelectManage.png)
