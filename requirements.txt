@@ -1,5 +1,5 @@
 alembic==1.0.10
-certifi==2019.3.9
+certifi==2022.12.7
 Click==7.0
 dominate==2.3.5
 Flask==1.0.3
