@@ -100,7 +100,7 @@ class Student(UserMixin, db.Model):
     StudentName = db.Column(db.String(10), nullable=False)
     StudentSex = db.Column(db.String(10), nullable=False)
     StudentInyear = db.Column(db.String(4), nullable=False)
-    StudengtPassword = db.Column(db.Text, nullable=False)
+    StudentPassword = db.Column(db.Text, nullable=False)
     Courses = db.relationship('Course', secondary='course_select_table', backref='student', lazy='dynamic')
 
     def __init__(self, StudentNum, MajorNum, StudentName, StudentSex, StudentInyear):
@@ -115,9 +115,9 @@ class Student(UserMixin, db.Model):
     def get_id(self):
         return self.StudentNum
     def set_password(self, password):
-        self.StudengtPassword = generate_password_hash(password)
+        self.StudentPassword = generate_password_hash(password)
     def check_password(self, password):
-        return check_password_hash(self.StudengtPassword, password)
+        return check_password_hash(self.StudentPassword, password)
     def drop_course(self, CourseNum):
         course_drop = [course for course in self.Courses if course.CourseNum==CourseNum][0]
         self.Courses.remove(course_drop)

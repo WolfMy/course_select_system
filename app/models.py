@@ -85,16 +85,16 @@ class Student(UserMixin, db.Model):
     StudentName = db.Column(db.String(10), nullable=False)
     StudentSex = db.Column(db.String(10), nullable=False)
     StudentBirthday = db.Column(db.DateTime)
-    StudengtPassword = db.Column(db.Text, nullable=False)
-    Course = db.relationship('Course', secondary=Course_select_table, backref=db.backref('student', lazy='dynamic'))
+    StudentPassword = db.Column(db.Text, nullable=False)
+    Courses = db.relationship('Course', secondary=Course_select_table, backref=db.backref('student', lazy='dynamic'))
 
     # override
     def get_id(self):
         return self.StudentNum
     def set_password(self, password):
-        self.StudengtPassword = generate_password_hash(password)
+        self.StudentPassword = generate_password_hash(password)
     def check_password(self, password):
-        return check_password_hash(self.StudengtPassword, password)
+        return check_password_hash(self.StudentPassword, password)
 
 class Course(db.Model):
     # 课程
