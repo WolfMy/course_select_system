@@ -16,7 +16,7 @@
         <input type="number" name="StudentNum" class="form-control" placeholder="学生学号" required>
       </div>
       <div class="col">
-      <button type="submit" class="btn btn-block btn-success mb-2">手动签课</button>
+      <button type="submit" class="btn btn-block btn-primary mb-2">手动签课</button>
       </div>
     </div>
   </form>
@@ -40,7 +40,7 @@
   <hr>
   <div class="container mb-4"></div>
     <table class="table table-striped table-hover">
-            <thead class="thead-dark">
+            <thead class="text-light bg-primary">
         <tr>
             <th class="lead">课程号</th>
             <th class="lead">课程名</th>
@@ -63,7 +63,7 @@
            <td class="lead">{{ table.CourseCapacity }}</td>
            <td class="lead">{{ table.CourseStudents }}</td>
            <td class="lead">
-              <a href="{{ url_for('change_course_capacity', CourseNum=table.CourseNum, TeacherNum=table.TeacherNum, add_or_sub='add') }}" class="btn btn-success btn-sm" role="button">扩容</a>
+              <a href="{{ url_for('change_course_capacity', CourseNum=table.CourseNum, TeacherNum=table.TeacherNum, add_or_sub='add') }}" class="btn btn-primary btn-sm" role="button">扩容</a>
               <a href="{{ url_for('change_course_capacity', CourseNum=table.CourseNum, TeacherNum=table.TeacherNum, add_or_sub='sub') }}" class="btn btn-warning btn-sm" role="button">缩容</a>
            </td>
            <td class="lead">

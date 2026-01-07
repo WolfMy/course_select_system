@@ -9,10 +9,10 @@
 {% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <!--span class="navbar-brand mb-0 lead">功能列表</span-->
         <a class="navbar-brand" href="#">
-            <img src="/static/img/logo.png" width="100" height="40" class="d-inline-block align-top" alt="">
+            <img src="/static/img/logo.png" width="50" height="50" class="d-inline-block align-top" alt="">
         </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -27,14 +27,13 @@
         <li>{% block a5 %}{% endblock %}</li>
         <li>{% block a6 %}{% endblock %}</li>
         </ul>
-        <a class="btn btn-danger " href="{{ url_for('logout') }}">退出系统</a>
+        <a class="btn btn-light text-primary" href="{{ url_for('logout') }}">退出系统</a>
         
     </div>
 </nav>
 {% endblock %}
 
 {% block content %}
-    <!--img src="/static/img/head.gif"-->
     <div class="container">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
