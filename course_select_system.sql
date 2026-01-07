@@ -226,7 +226,7 @@ CREATE TABLE `student` (
   `StudentName` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `StudentSex` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `StudentInyear` varchar(4) COLLATE utf8_unicode_ci NOT NULL,
-  `StudengtPassword` text COLLATE utf8_unicode_ci NOT NULL,
+  `StudentPassword` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`StudentNum`),
   KEY `MajorNum` (`MajorNum`),
   CONSTRAINT `student_ibfk_1` FOREIGN KEY (`MajorNum`) REFERENCES `major` (`MajorNum`)
