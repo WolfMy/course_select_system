@@ -159,3 +159,4 @@ python main.py
    ![image](https://github.com/WolfMy/course_select_system/blob/master/image/CourseManage2.png)
 
    ![image](https://github.com/WolfMy/course_select_system/blob/master/image/SelectManage.png)
+   
