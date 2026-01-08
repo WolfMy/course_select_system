@@ -34,8 +34,10 @@
 </nav>
 {% endblock %}
 
+{% set bg_section_class = bg_section_class|default('bg-section') %}
+
 {% block content %}
-<div class="bg-section">
+<div class="{{ bg_section_class }}">
     <div class="container">
         {% with messages = get_flashed_messages() %}
         {% if messages %}

@@ -76,7 +76,7 @@ def logout():
 @login_required
 def student_index():
     if isinstance(current_user._get_current_object(), Student):
-        return render_template('student/student.html')
+        return render_template('student/student.html', bg_section_class='bg-section-welcome')
     else:
         logout_user()
     
@@ -84,7 +84,7 @@ def student_index():
 @login_required
 def teacher_index():
     if isinstance(current_user._get_current_object(), Teacher):
-        return render_template('teacher/teacher.html')
+        return render_template('teacher/teacher.html', bg_section_class='bg-section-welcome')
     else:
         logout_user()
 
@@ -92,7 +92,7 @@ def teacher_index():
 @login_required
 def manager():
     if isinstance(current_user._get_current_object(), Manager):
-        return render_template('admin/manager.html')
+        return render_template('admin/manager.html', bg_section_class='bg-section-welcome')
     else:
         logout_user()
         return redirect(url_for('admin'))
