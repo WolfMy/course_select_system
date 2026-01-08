@@ -397,6 +397,26 @@ section.callout h3 {
 	margin: 0;
 }
 
+/*bg-image*/
+.bg-section {
+	position: relative; /* 让伪元素相对当前元素定位 */
+	min-height: 100vh;
+	z-index: 1; /* 确保内容在伪元素上方 */
+}
+
+.bg-section::before {
+	content: ""; /* 伪元素必须有content */
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0.4; /* 0-1之间，0完全透明，1不透明 */
+	z-index: -1; /* 把背景图压在内容下方 */
+	background: url('../img/bg.jpg') no-repeat center center fixed; 
+	background-size: cover;
+}
+
 /*list*/
 .list-item {
 	display: flex;

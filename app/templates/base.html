@@ -6,6 +6,7 @@
 
 {% block styles %}
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/css/stisla.css">
 {% endblock %}
 
 {% block navbar %}
@@ -34,6 +35,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="bg-section">
     <div class="container">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -43,9 +45,11 @@
         {% endif %}
         {% endwith %}
 
+        <div class="pb-4"></div>
         {# application content needs to be provided in the app_content block #}
         {% block app_content %}{% endblock %}
     </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
