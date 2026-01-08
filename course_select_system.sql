@@ -1,19 +1,35 @@
--- MySQL dump 10.13  Distrib 5.7.26, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 9.5.0, for macos26.1 (arm64)
 --
 -- Host: localhost    Database: course_select_system
 -- ------------------------------------------------------
--- Server version	5.7.26-0ubuntu0.16.04.1
+-- Server version	9.5.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+SET @MYSQLDUMP_TEMP_LOG_BIN = @@SESSION.SQL_LOG_BIN;
+SET @@SESSION.SQL_LOG_BIN= 0;
+
+--
+-- GTID state at the beginning of the backup 
+--
+
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '97374f78-eb8b-11f0-b54c-d5d5ade16141:1-161';
+
+--
+-- Current Database: `course_select_system`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `course_select_system` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+USE `course_select_system`;
 
 --
 -- Table structure for table `alembic_version`
@@ -21,11 +37,11 @@
 
 DROP TABLE IF EXISTS `alembic_version`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `alembic_version` (
-  `version_num` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `version_num` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   PRIMARY KEY (`version_num`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,18 +60,18 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `course`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `course` (
-  `CourseNum` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
-  `CourseName` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `CourseCredit` int(11) NOT NULL,
-  `CourseTime` int(11) NOT NULL,
-  `CourseDesc` text COLLATE utf8_unicode_ci,
-  `DeptNum` varchar(4) COLLATE utf8_unicode_ci NOT NULL,
+  `CourseNum` varchar(8) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `CourseName` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `CourseCredit` int NOT NULL,
+  `CourseTime` int NOT NULL,
+  `CourseDesc` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
+  `DeptNum` varchar(4) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   PRIMARY KEY (`CourseNum`),
   KEY `DeptNum` (`DeptNum`),
   CONSTRAINT `course_ibfk_1` FOREIGN KEY (`DeptNum`) REFERENCES `dept` (`deptnum`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,19 +90,19 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `course_select_table`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `course_select_table` (
-  `StudentNum` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
-  `CourseNum` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `TeacherNum` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
-  `Grade` int(11) DEFAULT NULL,
+  `StudentNum` varchar(8) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `CourseNum` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `TeacherNum` varchar(8) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `Grade` int DEFAULT NULL,
   PRIMARY KEY (`StudentNum`,`CourseNum`,`TeacherNum`),
   KEY `CourseNum` (`CourseNum`),
   KEY `TeacherNum` (`TeacherNum`),
   CONSTRAINT `course_select_table_ibfk_1` FOREIGN KEY (`CourseNum`) REFERENCES `course` (`CourseNum`),
   CONSTRAINT `course_select_table_ibfk_2` FOREIGN KEY (`StudentNum`) REFERENCES `student` (`studentnum`),
   CONSTRAINT `course_select_table_ibfk_3` FOREIGN KEY (`TeacherNum`) REFERENCES `teacher` (`teachernum`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -105,16 +121,16 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `course_teacher`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `course_teacher` (
-  `CourseNum` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
-  `TeacherNum` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `CourseCapacity` int(11) NOT NULL,
+  `CourseNum` varchar(8) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `TeacherNum` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `CourseCapacity` int NOT NULL,
   PRIMARY KEY (`CourseNum`,`TeacherNum`),
   KEY `TeacherNum` (`TeacherNum`),
   CONSTRAINT `course_teacher_ibfk_1` FOREIGN KEY (`CourseNum`) REFERENCES `course` (`CourseNum`),
   CONSTRAINT `course_teacher_ibfk_2` FOREIGN KEY (`TeacherNum`) REFERENCES `teacher` (`teachernum`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,15 +149,15 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `dept`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dept` (
-  `DeptNum` varchar(4) COLLATE utf8_unicode_ci NOT NULL,
-  `DeptName` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `DeptChairman` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `DeptTel` varchar(11) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `DeptDesc` text COLLATE utf8_unicode_ci,
+  `DeptNum` varchar(4) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `DeptName` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `DeptChairman` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `DeptTel` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `DeptDesc` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   PRIMARY KEY (`DeptNum`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,19 +176,19 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `major`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `major` (
-  `MajorNum` varchar(6) COLLATE utf8_unicode_ci NOT NULL,
-  `DeptNum` varchar(4) COLLATE utf8_unicode_ci NOT NULL,
-  `MajorName` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `MajorAssistant` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `MajorTel` varchar(11) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `MajorDesc` text COLLATE utf8_unicode_ci,
-  `TrainingProgram` varchar(7) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `MajorNum` varchar(6) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `DeptNum` varchar(4) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `MajorName` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `MajorAssistant` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `MajorTel` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `MajorDesc` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
+  `TrainingProgram` varchar(7) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`MajorNum`),
   KEY `DeptNum` (`DeptNum`),
   CONSTRAINT `major_ibfk_1` FOREIGN KEY (`DeptNum`) REFERENCES `dept` (`DeptNum`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -191,16 +207,16 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `manager`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `manager` (
-  `ManagerNum` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
-  `ManagerName` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `ManagerSex` varchar(2) COLLATE utf8_unicode_ci NOT NULL,
+  `ManagerNum` varchar(8) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `ManagerName` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `ManagerSex` varchar(2) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `ManagerBirthday` datetime DEFAULT NULL,
-  `ManagerPassword` text COLLATE utf8_unicode_ci NOT NULL,
-  `ManagerPermission` int(11) NOT NULL,
+  `ManagerPassword` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `ManagerPermission` int NOT NULL,
   PRIMARY KEY (`ManagerNum`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -219,18 +235,18 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `student`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `student` (
-  `StudentNum` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
-  `MajorNum` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
-  `StudentName` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `StudentSex` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `StudentInyear` varchar(4) COLLATE utf8_unicode_ci NOT NULL,
-  `StudentPassword` text COLLATE utf8_unicode_ci NOT NULL,
+  `StudentNum` varchar(8) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `MajorNum` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `StudentName` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `StudentSex` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `StudentInyear` varchar(4) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `StudentPassword` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   PRIMARY KEY (`StudentNum`),
   KEY `MajorNum` (`MajorNum`),
   CONSTRAINT `student_ibfk_1` FOREIGN KEY (`MajorNum`) REFERENCES `major` (`MajorNum`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -239,7 +255,7 @@ CREATE TABLE `student` (
 
 LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` VALUES ('17262229','5','李明','男','2017','pbkdf2:sha256:150000$J125habF$a8e79022bf66ab52467660edf84dbaab60d843b9f75e2a3c9ce15581eb24d862'),('17272224','1','张伟','男','2017','pbkdf2:sha256:150000$cpVX6sre$a50066924e9d647237ee4489c59c29a4674d69cc81910028d74d98cff395249b'),('17272225','2','王芳','男','2017','pbkdf2:sha256:150000$JsNLA406$46b9a76895d17825ead245f5401393c54a8bd770bbadcc9445c6446abf3f51ff'),('17272227','2','刘洋','男','2017','pbkdf2:sha256:150000$fE2he8Sq$e311d730f648be3df26a0634f240af7909d6b9e03fe94e4837b71e38abe469ef'),('17282224','16','陈静','女','2017','pbkdf2:sha256:150000$JK1MBBsP$733f34e4ef9d11dd0a5b12d4f836b83e66ddd17711012477376b121d80dbf9b3');
+INSERT INTO `student` VALUES ('12345678','1','王明','男','2026','pbkdf2:sha256:600000$KgQHLnQQDoQe31OP$f90cca7f08b9b5a657a91013bceef38014cef72e12c5c14e200be1adc4366195'),('17262229','5','李明','男','2017','pbkdf2:sha256:150000$J125habF$a8e79022bf66ab52467660edf84dbaab60d843b9f75e2a3c9ce15581eb24d862'),('17272224','1','张伟','男','2017','pbkdf2:sha256:150000$cpVX6sre$a50066924e9d647237ee4489c59c29a4674d69cc81910028d74d98cff395249b'),('17272225','2','王芳','男','2017','pbkdf2:sha256:150000$JsNLA406$46b9a76895d17825ead245f5401393c54a8bd770bbadcc9445c6446abf3f51ff'),('17272227','2','刘洋','男','2017','pbkdf2:sha256:150000$fE2he8Sq$e311d730f648be3df26a0634f240af7909d6b9e03fe94e4837b71e38abe469ef'),('17282224','16','陈静','女','2017','pbkdf2:sha256:150000$JK1MBBsP$733f34e4ef9d11dd0a5b12d4f836b83e66ddd17711012477376b121d80dbf9b3');
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -249,19 +265,19 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `teacher`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `teacher` (
-  `TeacherNum` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
-  `DeptNum` varchar(4) COLLATE utf8_unicode_ci NOT NULL,
-  `TeacherName` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `TeacherSex` varchar(2) COLLATE utf8_unicode_ci NOT NULL,
-  `TeacherInyear` varchar(4) COLLATE utf8_unicode_ci NOT NULL,
-  `TeacherTitle` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `TeacherPassword` text COLLATE utf8_unicode_ci NOT NULL,
+  `TeacherNum` varchar(8) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `DeptNum` varchar(4) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `TeacherName` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `TeacherSex` varchar(2) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `TeacherInyear` varchar(4) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `TeacherTitle` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `TeacherPassword` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   PRIMARY KEY (`TeacherNum`),
   KEY `DeptNum` (`DeptNum`),
   CONSTRAINT `teacher_ibfk_1` FOREIGN KEY (`DeptNum`) REFERENCES `dept` (`DeptNum`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -280,11 +296,11 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `training_program`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `training_program` (
-  `TPNumber` varchar(7) COLLATE utf8_unicode_ci NOT NULL,
+  `TPNumber` varchar(7) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   PRIMARY KEY (`TPNumber`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -296,6 +312,15 @@ LOCK TABLES `training_program` WRITE;
 INSERT INTO `training_program` VALUES ('1'),('10'),('11'),('12'),('13'),('14'),('15'),('16'),('17'),('18'),('19'),('2'),('3'),('4'),('5'),('6'),('7'),('8'),('9');
 /*!40000 ALTER TABLE `training_program` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping events for database 'course_select_system'
+--
+
+--
+-- Dumping routines for database 'course_select_system'
+--
+SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -306,4 +331,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-11-14 11:15:38
+-- Dump completed on 2026-01-08 11:24:11
