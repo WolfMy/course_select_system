@@ -76,7 +76,7 @@ def logout():
 @login_required
 def student_index():
     if isinstance(current_user._get_current_object(), Student):
-        return render_template('student/student.html', bg_section_class='bg-section-welcome')
+        return render_template('student/student.html')
     else:
         logout_user()
     
@@ -84,7 +84,7 @@ def student_index():
 @login_required
 def teacher_index():
     if isinstance(current_user._get_current_object(), Teacher):
-        return render_template('teacher/teacher.html', bg_section_class='bg-section-welcome')
+        return render_template('teacher/teacher.html')
     else:
         logout_user()
 
@@ -92,7 +92,7 @@ def teacher_index():
 @login_required
 def manager():
     if isinstance(current_user._get_current_object(), Manager):
-        return render_template('admin/manager.html', bg_section_class='bg-section-welcome')
+        return render_template('admin/manager.html')
     else:
         logout_user()
         return redirect(url_for('admin'))
@@ -114,7 +114,7 @@ def student_info(change):
             db.session.commit()
             flash('Your changes have been saved.')
         return redirect(url_for('student_info'))
-    return render_template('student/student_info.html', change=change)
+    return render_template('student/student_info.html', change=change, bg_section_class='bg-section-welcome')
 
 @app.route('/teacher_info/<int:change>', methods=['GET','POST'])
 @app.route('/teacher_info', defaults={'change':0}, methods=['GET','POST'])
@@ -133,7 +133,7 @@ def teacher_info(change):
             db.session.commit()
             flash('Your changes have been saved.')
         return redirect(url_for('teacher_info'))
-    return render_template('teacher/teacher_info.html', change=change)
+    return render_template('teacher/teacher_info.html', change=change, bg_section_class='bg-section-welcome')
 
 @app.route('/course_select_table', methods=['GET',])
 @login_required
