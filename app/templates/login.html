@@ -4,12 +4,11 @@
 
 {% block styles %}
   <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
-  <link href="https://getbootstrap.com/docs/4.0/examples/floating-labels/floating-labels.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/floating-labels.css">
 {% endblock%}
 
   {% block content %}
-  <div class="container">
+    <div class="container">
       <div class="row clearfix">
           <div class="col-md-10 column">
           </div>
@@ -18,38 +17,38 @@
         </div>
       </div>
       <div class="row clearfix">
-    <form action="/login" method="POST" class="form-signin">
-      <div class="text-center mb-4">
-        <h1><strong>学生选课系统</strong></h1>
-      </div>
-      <br>      
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-warning" role="alert">
-            <strong>{{ message }}</strong>
+        <form action="/login" method="POST" class="form-signin">
+          <div class="text-center mb-4">
+            <h1><strong>学生选课系统</strong></h1>
           </div>
-        {% endfor %}
-      {% endif %}
-      {% endwith %}
-      <div class="form-label-group">
-        <input type="number" name="username" id="inputText" class="form-control" placeholder="Username" required autofocus>
-        <label for="inputText">学号</label>
-      </div>
+          <br>      
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-warning" role="alert">
+                <strong>{{ message }}</strong>
+              </div>
+            {% endfor %}
+          {% endif %}
+          {% endwith %}
+          <div class="form-label-group">
+            <input type="number" name="username" id="inputText" class="form-control" placeholder="Username" required autofocus>
+            <label for="inputText">学号</label>
+          </div>
 
-      <div class="form-label-group">
-        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <label for="inputPassword">密码</label>
+          <div class="form-label-group">
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <label for="inputPassword">密码</label>
+          </div>
+          <div class="checkbox mb-3">
+            <label>
+              <input type="checkbox" name="remember"> Remember me
+            </label>
+          </div>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">登陆</button>
+          <p class="mt-5 mb-3 text-muted text-center">&copy; DropDataBase 2019-2020</p>
+        </form>
       </div>
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" name="remember"> Remember me
-        </label>
-      </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">登陆</button>
-      <p class="mt-5 mb-3 text-muted text-center">&copy; DropDataBase 2019-2020</p>
-    </form>
-  </div>
-  </div>
+    </div>
   {% endblock %}
 
