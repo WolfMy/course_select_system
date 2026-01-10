@@ -21,15 +21,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '97374f78-eb8b-11f0-b54c-d5d5ade16141:1-161';
-
---
--- Current Database: `course_select_system`
---
-
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `course_select_system` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
-
-USE `course_select_system`;
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '97374f78-eb8b-11f0-b54c-d5d5ade16141:1-166';
 
 --
 -- Table structure for table `alembic_version`
@@ -139,7 +131,7 @@ CREATE TABLE `course_teacher` (
 
 LOCK TABLES `course_teacher` WRITE;
 /*!40000 ALTER TABLE `course_teacher` DISABLE KEYS */;
-INSERT INTO `course_teacher` VALUES ('1','0001',11),('12','2001',30),('14','2002',25),('2','0002',30),('2','0004',10),('20','0038',48),('3','0003',20),('4','0001',15),('5','1001',10),('6','1002',5),('7','0005',50);
+INSERT INTO `course_teacher` VALUES ('1','0001',11),('10','0001',20),('11','0038',80),('12','2001',30),('14','2002',25),('15','2001',80),('2','0002',30),('2','0004',10),('20','0038',48),('3','0003',20),('4','0001',15),('5','1001',10),('6','1002',5),('7','0005',50),('9','2000',40);
 /*!40000 ALTER TABLE `course_teacher` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -312,14 +304,6 @@ LOCK TABLES `training_program` WRITE;
 INSERT INTO `training_program` VALUES ('1'),('10'),('11'),('12'),('13'),('14'),('15'),('16'),('17'),('18'),('19'),('2'),('3'),('4'),('5'),('6'),('7'),('8'),('9');
 /*!40000 ALTER TABLE `training_program` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping events for database 'course_select_system'
---
-
---
--- Dumping routines for database 'course_select_system'
---
 SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -331,4 +315,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-01-08 11:24:11
+-- Dump completed on 2026-01-10 22:27:52
