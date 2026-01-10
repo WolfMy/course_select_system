@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from app import app
-from flask import render_template, request, flash, redirect, url_for, url_parse
+from flask import render_template, request, flash, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
+from werkzeug.urls import url_parse
 from app.models_new import (
     Student,
     Teacher,
@@ -32,8 +33,7 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        remember = request.form.get("remember")
-        remember = [True if remember == "on" else False][0]
+        remember = request.form.get("remember") == "on"
         error = None
         is_student = 1
         user = Student.query.filter_by(StudentNum=username).first()
